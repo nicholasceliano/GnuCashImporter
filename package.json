@@ -1,0 +1,22 @@
+{
+    "name": "bankstatementtognucashdatabase",
+    "version": "1.0.0",
+    "description": "Insert Bank Statement to GnuCash SQL database",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon",
+        "build": "rimraf ./build && tsc",
+        "prod": "npm run build && node build/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Nicholas Celiano",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/node": "^13.7.4",
+        "nodemon": "^2.0.2",
+        "rimraf": "^3.0.2",
+        "ts-node": "^8.6.2",
+        "typescript": "^3.8.2"
+    }
+}
