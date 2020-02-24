@@ -4,7 +4,7 @@ import { GnuCashTransaction } from "../../models/GnuCashTransaction";
 import { AllyBankRecord } from '../../models/institutions/AllyBankRecord';
 import { environment } from '../../environments/environment';
 
-export class AllyBank implements BankInstitution {
+export class AllyBankService implements BankInstitution {
 
     ImportCSV(fileContent: string): GnuCashTransaction[] {
         const records = this.parseCSV(fileContent);

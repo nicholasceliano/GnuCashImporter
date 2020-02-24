@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-export class FileUtility {
+export class FileUtilityService {
     GetFilePrefix(fileName: string): string {
         if (fileName.indexOf('_') > -1) {
             return fileName.split('_')[0]

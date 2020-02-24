@@ -1,24 +1,24 @@
 import * as fs from 'fs';
-import { GnuCashDatabase } from "../gnucash/gnucashDatabase";
-import { AllyBank } from "../institutions/allyBank.service";
+import { GnuCashDatabaseService } from "../gnucash/gnucashDatabase.service";
+import { AllyBankService } from "../institutions/allyBank.service";
 import { GnuCashTransaction } from "../../models/GnuCashTransaction";
 import { BankInstitution } from '../../models/BankInstitution';
-import { FileUtility } from './fileUtility.service';
+import { FileUtilityService } from './fileUtility.service';
 import { environment } from '../../environments/environment';
-import { TDAmeritrade } from '../institutions/tdAmeritrade.service';
+import { TDAmeritradeService } from '../institutions/tdAmeritrade.service';
 import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData';
 
-export class FilePuller {
-    private allyBank: AllyBank;
-    private tdAmeritrade: TDAmeritrade;
-    private fileUtility: FileUtility;
-    private gnuCash: GnuCashDatabase;
+export class FilePullerService {
+    private allyBank: AllyBankService;
+    private tdAmeritrade: TDAmeritradeService;
+    private fileUtility: FileUtilityService;
+    private gnuCash: GnuCashDatabaseService;
 
     constructor() {
-        this.allyBank = new AllyBank();
-        this.tdAmeritrade = new TDAmeritrade();
-        this.fileUtility = new FileUtility();
-        this.gnuCash = new GnuCashDatabase();
+        this.allyBank = new AllyBankService();
+        this.tdAmeritrade = new TDAmeritradeService();
+        this.fileUtility = new FileUtilityService();
+        this.gnuCash = new GnuCashDatabaseService();
     }
 
     ImportFilesFromDirectory(): void {

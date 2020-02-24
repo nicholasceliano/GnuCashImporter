@@ -1,4 +1,7 @@
-import { FilePuller } from "./services/file/filePuller.service"
+require('./prototypes/date.prototype');
+require('./prototypes/string.prototype');
+require('./prototypes/number.prototype');
+import { FilePullerService } from "./services/file/filePuller.service"
 
 console.log('Starting...');
-new FilePuller().ImportFilesFromDirectory();
+new FilePullerService().ImportFilesFromDirectory();

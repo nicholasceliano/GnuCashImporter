@@ -1,7 +1,7 @@
 import { BankInstitution } from "../../models/BankInstitution";
 import { GnuCashTransaction } from "../../models/GnuCashTransaction";
 
-export class TDAmeritrade implements BankInstitution {
+export class TDAmeritradeService implements BankInstitution {
 
     ImportCSV(fileContent: string): GnuCashTransaction[] {
         console.log(fileContent);

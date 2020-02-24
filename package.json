@@ -13,8 +13,12 @@
     "author": "Nicholas Celiano",
     "license": "ISC",
     "dependencies": {
+        "@types/mysql": "^2.15.8",
+        "@types/uuid": "^3.4.7",
         "csv-parse": "^4.8.6",
-        "node": "^13.8.0"
+        "mysql": "^2.18.1",
+        "node": "^13.7.0",
+        "uuid": "^3.4.0"
     },
     "devDependencies": {
         "@types/node": "^13.7.4",
@@ -26,5 +30,13 @@
         "rimraf": "^3.0.2",
         "ts-node": "^8.6.2",
         "typescript": "^3.8.2"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nicholasceliano/BankStatementToGnuCashDatabase.git"
+    },
+    "bugs": {
+        "url": "https://github.com/nicholasceliano/BankStatementToGnuCashDatabase/issues"
+    },
+    "homepage": "https://github.com/nicholasceliano/BankStatementToGnuCashDatabase#readme"
 }
