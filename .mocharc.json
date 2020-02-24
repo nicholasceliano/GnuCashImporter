@@ -1,0 +1,7 @@
+{
+    "watch-files": ["src"],
+    "extension": ["ts"],
+    "spec": "src/**/*.spec.ts",
+    "reporter": "min",
+    "require": ["ts-node/register"]
+  }

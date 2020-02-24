@@ -1,7 +1,7 @@
 import * as fs from 'fs';
-import { GnuCashDatabaseService } from "../gnucash/gnucashDatabase.service";
-import { AllyBankService } from "../institutions/allyBank.service";
-import { GnuCashTransaction } from "../../models/GnuCashTransaction";
+import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service';
+import { AllyBankService } from '../institutions/allyBank.service';
+import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { BankInstitution } from '../../models/BankInstitution';
 import { FileUtilityService } from './fileUtility.service';
 import { environment } from '../../environments/environment';

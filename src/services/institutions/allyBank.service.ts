@@ -1,6 +1,6 @@
 import parse = require('csv-parse/lib/sync');
-import { BankInstitution } from "../../models/BankInstitution";
-import { GnuCashTransaction } from "../../models/GnuCashTransaction";
+import { BankInstitution } from '../../models/BankInstitution';
+import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { AllyBankRecord } from '../../models/institutions/AllyBankRecord';
 import { environment } from '../../environments/environment';
 

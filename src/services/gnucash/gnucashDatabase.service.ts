@@ -1,14 +1,14 @@
-import { GnuCashTransaction } from "../../models/GnuCashTransaction";
-import { GnuCashImportMetaData } from "../../models/GnuCashImportMetaData";
+import { GnuCashTransaction } from '../../models/GnuCashTransaction';
+import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData';
 import mysql = require('mysql');
 import { v4 } from 'uuid'
-import { environment } from "../../environments/environment";
-import { GnuCashAccount } from "../../models/GnuCashAccount";
-import { GnuCashPriceService } from "./gnucashPrice.service";
+import { environment } from '../../environments/environment';
+import { GnuCashAccount } from '../../models/GnuCashAccount';
+import { GnuCashPriceService } from './gnucashPrice.service';
 
 export class GnuCashDatabaseService {
 	private gnuCashPrice: GnuCashPriceService;
-	private mySql: mysql.Connection; 
+	private mySql: mysql.Connection;
 
 	constructor() {
 		this.gnuCashPrice = new GnuCashPriceService();
@@ -19,7 +19,7 @@ export class GnuCashDatabaseService {
 			database: environment.gnuCashDatabase.database
 		});
 	}
-	
+
     InsertTransactions(transactions: GnuCashTransaction[]): GnuCashImportMetaData {
 		// Fix ValueNum/Denom and QuantityNum/Denom for Investments
 		// build in lookup to find matching descriptions from past transactions and split to same account
@@ -44,7 +44,7 @@ export class GnuCashDatabaseService {
 
         return importMetaData;
 	}
-	
+
 	private insertTransaction(transaction: GnuCashTransaction): void {
 		this.mySql.query(`INSERT INTO transactions VALUES (
 			'${transaction.TransactionGuid}',
@@ -92,7 +92,7 @@ export class GnuCashDatabaseService {
 			if (err) throw err;
 		});
 	}
-	
+
 	private insertImbalanceTransactionSplit(transaction: GnuCashTransaction): void {
 		this.getAccountByGuid(environment.gnuCashAccountGuid.imbalance).then(x => {
 			transaction.TransactionGuid = v4().removeDashes();

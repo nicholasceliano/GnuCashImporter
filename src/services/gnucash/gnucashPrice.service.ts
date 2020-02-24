@@ -1,5 +1,5 @@
-import { GnuCashTransaction } from "../../models/GnuCashTransaction";
-import { Fraction } from "../../models/Fraction";
+import { GnuCashTransaction } from '../../models/GnuCashTransaction';
+import { Fraction } from '../../models/Fraction';
 
 export class GnuCashPriceService {
 	SetTransactionValueFractions(transaction: GnuCashTransaction, initialSplit = true): GnuCashTransaction {
@@ -22,7 +22,7 @@ export class GnuCashPriceService {
 		return {
 			Numerator: simplifiedFrac[0],
 			Denominator: simplifiedFrac[1]
-		} as Fraction; 
+		} as Fraction;
 	}
 
 	private calcValueNum(price: string): number {
