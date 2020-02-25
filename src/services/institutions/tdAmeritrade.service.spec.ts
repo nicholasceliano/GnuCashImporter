@@ -1,4 +1,5 @@
 import { TDAmeritradeService } from './tdAmeritrade.service';
+import { assert } from 'chai';
 
 describe('TDAmeritradeService', () => {
     let service: TDAmeritradeService;
@@ -7,9 +8,11 @@ describe('TDAmeritradeService', () => {
         service = new TDAmeritradeService();
     });
 
-    it('', () => {
-        // const resp = service.GetFilePrefix('ALLY_test1230492_test1234.csv');
+    it('ImportCSV throws Not Implemented', () => {
+        assert.throws(() => service.ImportCSV(''), 'Not Implemented');
+    });
 
-        // assert.equal(resp, 'ALLY');
+    it('ImportPDF throws Not Implemented', () => {
+        assert.throws(() => service.ImportPDF(), 'Not Implemented');
     });
 });

@@ -5,8 +5,7 @@ export interface GnuCashTransaction {
     PostDate: Date;
     CreateDate: Date;
 
-    // These all need to be calculated during/right before insert
-    CurrencyGuid?: string; // Pulled from lookup off Account Guid
+    CurrencyGuid?: string;
     TransactionGuid?: string;
     ValueNum?: number;
     ValueDenom?: number;

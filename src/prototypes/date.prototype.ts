@@ -3,7 +3,7 @@ declare interface Date {
 }
 
 ((): void => {
-    Date.prototype.toMySqlDateTimeString = function(this: Date): string {
+    Date.prototype.toMySqlDateTimeString = function (this: Date): string {
         return this.toISOString().replace(/T/, ' ').replace(/\..+/, '');
     };
 })();

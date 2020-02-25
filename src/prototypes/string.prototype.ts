@@ -3,7 +3,7 @@ declare interface String {
 }
 
 ((): void => {
-    String.prototype.removeDashes = function(this: string): string {
+    String.prototype.removeDashes = function (this: string): string {
         return this.replace(/-/g, '');
     };
 })();

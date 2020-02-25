@@ -5,15 +5,16 @@ import { BankInstitution } from '../../models/BankInstitution';
 import { FileUtilityService } from './fileUtility.service';
 import { environment } from '../../environments/environment';
 import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData';
-import { SERVICE_REFERENCES } from '../../inversify.config';
 import { inject, injectable } from 'inversify';
+import { AllyBankService } from '../institutions/allyBank.service';
+import { TDAmeritradeService } from '../institutions/tdAmeritrade.service';
 
 @injectable()
 export class FilePullerService {
 
     constructor(
-        @inject(SERVICE_REFERENCES.AllyBank) private allyBank: BankInstitution,
-        @inject(SERVICE_REFERENCES.TdAmeritrade) private tdAmeritrade: BankInstitution,
+        @inject(AllyBankService) private allyBank: BankInstitution,
+        @inject(TDAmeritradeService) private tdAmeritrade: BankInstitution,
         private fileUtility: FileUtilityService,
         private gnuCash: GnuCashDatabaseService) { }
 
@@ -31,7 +32,11 @@ export class FilePullerService {
                         if (err) throw err;
 
                         const importMetaData = this.gnuCash.InsertTransactions(this.getTransactionsFromFile(fileName, fileContent));
-                        this.archiveFile(fileName, importMetaData);
+                        if (importMetaData) {
+                            this.archiveFile(fileName, importMetaData);
+                        } else {
+                            this.deleteFile(fileName);
+                        }
                     });
                 }
             });
@@ -72,5 +77,10 @@ export class FilePullerService {
         fs.rename(`${environment.fileUploadDirectory}/${fileName}`, `${destFolder}/${destFileName}`, (err) => {
             if (err) throw err;
         });
+    }
+
+    private deleteFile(fileName: string): void {
+        console.log(`${fileName} - to be deleted.`);
+        throw ('Not Implemented');
     }
 }

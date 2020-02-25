@@ -1,15 +1,30 @@
 import { AllyBankService } from './allyBank.service';
+import { assert, expect } from 'chai';
+import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 
 describe('AllyBankService', () => {
     let service: AllyBankService;
+    let csvFile: string;
 
     beforeEach(() => {
         service = new AllyBankService();
+
+        csvFile = 'Date,Time'; // Need to get this from file
     });
 
-    it('', () => {
-        // const resp = service.GetFilePrefix('ALLY_test1230492_test1234.csv');
+    xit('ImportCSV', () => {
+        const resp = service.ImportCSV(csvFile)
 
-        // assert.equal(resp, 'ALLY');
+        expect(resp).to.be.eq({
+            AccountGuid: '',
+            Description: '',
+            Amount: 1234,
+            PostDate: new Date(),
+            CreateDate: new Date()
+        } as GnuCashTransaction);
+    });
+
+    it('ImportPDF throws Not Implemented', () => {
+        assert.throws(() => service.ImportPDF(), 'Not Implemented');
     });
 });

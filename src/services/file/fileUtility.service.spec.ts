@@ -1,5 +1,5 @@
 import { FileUtilityService } from './fileUtility.service';
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
 
 describe('FileUtilityService', () => {
     let service: FileUtilityService;
@@ -39,5 +39,13 @@ describe('FileUtilityService', () => {
         const resp = service.IsValidFile('./src/index.ts');
 
         expect(resp).to.be.true;
+    });
+
+    it('Exception thrown when prefix is missing', () => {
+        assert.throws(() => service.GetFilePrefix('BadPrefixFile.csv'), 'File not in correct format');
+    });
+
+    it('Exception thrown when filetype extension is missing', () => {
+        assert.throws(() => service.GetFileType('BadPrefixFilecsv'), 'File not in correct format');
     });
 });

@@ -9,74 +9,76 @@ import { injectable } from 'inversify';
 
 @injectable()
 export class GnuCashDatabaseService {
-	private mySql: mysql.Connection;
+    private mySql: mysql.Connection;
 
-	constructor(private gnuCashPrice: GnuCashPriceService) {
-		this.mySql = mysql.createConnection({
-			host: environment.gnuCashDatabase.host,
-			user: environment.gnuCashDatabase.user,
-			password: environment.gnuCashDatabase.password,
-			database: environment.gnuCashDatabase.database
-		});
+    constructor(private gnuCashPrice: GnuCashPriceService) {
+        this.mySql = mysql.createConnection({
+            host: environment.gnuCashDatabase.host,
+            user: environment.gnuCashDatabase.user,
+            password: environment.gnuCashDatabase.password,
+            database: environment.gnuCashDatabase.database
+        });
     }
 
-    InsertTransactions(transactions: GnuCashTransaction[]): GnuCashImportMetaData {
-		// Fix ValueNum/Denom and QuantityNum/Denom for Investments
-		// build in lookup to find matching descriptions from past transactions and split to same account
+    InsertTransactions(transactions: GnuCashTransaction[]): GnuCashImportMetaData | void {
+        // Fix ValueNum/Denom and QuantityNum/Denom for Investments
+        // build in lookup to find matching descriptions from past transactions and split to same account
 
-        const importMetaData: GnuCashImportMetaData = {
-            EarliestRecordDate: transactions.sort((a, b) => a.PostDate.getTime() - b.PostDate.getTime())[0].PostDate,
-            LatestRecordDate: transactions.sort((a, b) => b.PostDate.getTime() - a.PostDate.getTime())[0].PostDate
-        };
+        if (transactions.length > 0) {
+            const importMetaData: GnuCashImportMetaData = {
+                EarliestRecordDate: transactions.sort((a, b) => a.PostDate.getTime() - b.PostDate.getTime())[0].PostDate,
+                LatestRecordDate: transactions.sort((a, b) => b.PostDate.getTime() - a.PostDate.getTime())[0].PostDate
+            };
 
-        transactions.forEach(t => {
-			this.getAccountByGuid(t.AccountGuid).then(x => {
-				t.TransactionGuid = v4().removeDashes();
-				t = this.gnuCashPrice.SetTransactionValueFractions(t);
+            transactions.forEach(t => {
+                this.getAccountByGuid(t.AccountGuid).then(x => {
+                    t.TransactionGuid = v4().removeDashes();
+                    t = this.gnuCashPrice.SetTransactionValueFractions(t);
 
-				this.insertTransaction(t);
-				this.insertTransactionSplit(t);
-				this.insertImbalanceTransactionSplit(t);
+                    this.insertTransaction(t);
+                    this.insertTransactionSplit(t);
+                    this.insertImbalanceTransactionSplit(t);
 
-				console.log(`Inserted Transaction: ${x.name} - ${t.Description}`);
-			});
-		});
+                    console.log(`Inserted Transaction: ${x.name} - ${t.Description}`);
+                });
+            });
 
-        return importMetaData;
-	}
+            return importMetaData;
+        }
+    }
 
-	private insertTransaction(transaction: GnuCashTransaction): void {
-		this.mySql.query(`INSERT INTO transactions VALUES (
+    private insertTransaction(transaction: GnuCashTransaction): void {
+        this.mySql.query(`INSERT INTO transactions VALUES (
 			'${transaction.TransactionGuid}',
 			'${transaction.CurrencyGuid}',
 			'',
 			'${transaction.PostDate.toMySqlDateTimeString()}',
 			'${transaction.CreateDate.toMySqlDateTimeString()}',
 			'${transaction.Description}')`, (err) => {
-			if (err) throw err;
-		});
-	}
+            if (err) throw err;
+        });
+    }
 
-	private getAccountByGuid(accountId: string): Promise<GnuCashAccount> {
-		return new Promise((resolve, reject) => {
-			let account: GnuCashAccount;
+    private getAccountByGuid(accountId: string): Promise<GnuCashAccount> {
+        return new Promise((resolve, reject) => {
+            let account: GnuCashAccount;
 
-			this.mySql.query(`SELECT
+            this.mySql.query(`SELECT
 				guid, name, account_type, commodity_guid, parent_guid, hidden
 				FROM accounts WHERE guid='${accountId}' LIMIT 1`, (err, results) => {
-				if (err) reject(err);
+                if (err) reject(err);
 
-				results.forEach((r: GnuCashAccount) => {
-					account = r;
-				});
+                results.forEach((r: GnuCashAccount) => {
+                    account = r;
+                });
 
-				resolve(account);
-			});
-		});
-	}
+                resolve(account);
+            });
+        });
+    }
 
-	private insertTransactionSplit(transaction: GnuCashTransaction): void {
-		this.mySql.query(`INSERT INTO splits VALUES (
+    private insertTransactionSplit(transaction: GnuCashTransaction): void {
+        this.mySql.query(`INSERT INTO splits VALUES (
 			'${v4().removeDashes()}',
 			'${transaction.TransactionGuid}',
 			'${transaction.AccountGuid}',
@@ -89,18 +91,18 @@ export class GnuCashDatabaseService {
 			'${transaction.QuantityNum}',
 			'${transaction.QuantityDenom}',
 			null)`, (err) => {
-			if (err) throw err;
-		});
-	}
+            if (err) throw err;
+        });
+    }
 
-	private insertImbalanceTransactionSplit(transaction: GnuCashTransaction): void {
-		this.getAccountByGuid(environment.gnuCashAccountGuid.imbalance).then(x => {
-			transaction.TransactionGuid = v4().removeDashes();
-			transaction.AccountGuid = environment.gnuCashAccountGuid.imbalance;
-			transaction.CurrencyGuid = x.commodity_guid;
-			transaction = this.gnuCashPrice.SetTransactionValueFractions(transaction, false);
+    private insertImbalanceTransactionSplit(transaction: GnuCashTransaction): void {
+        this.getAccountByGuid(environment.gnuCashAccountGuid.imbalance).then(x => {
+            transaction.TransactionGuid = v4().removeDashes();
+            transaction.AccountGuid = environment.gnuCashAccountGuid.imbalance;
+            transaction.CurrencyGuid = x.commodity_guid;
+            transaction = this.gnuCashPrice.SetTransactionValueFractions(transaction);
 
-			this.insertTransactionSplit(transaction);
-		});
-	}
+            this.insertTransactionSplit(transaction);
+        });
+    }
 }

@@ -1,9 +1,13 @@
+import './string.prototype';
+import { expect } from 'chai';
 
 describe('StringPrototype', () => {
 
-    it('', () => {
-        // const resp = service.GetFilePrefix('ALLY_test1230492_test1234.csv');
+    it('Remove dashes removes all occurances of dashes', () => {
+        const input = '123-4214-5215-125125';
 
-        // assert.equal(resp, 'ALLY');
+        const resp = input.removeDashes();
+
+        expect(resp).to.eq('12342145215125125');
     });
 });

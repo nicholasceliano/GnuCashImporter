@@ -3,7 +3,7 @@ require('./prototypes/string.prototype');
 require('./prototypes/number.prototype');
 import 'reflect-metadata';
 import { FilePullerService } from './services/file/filePuller.service'
-import { Inversify } from './inversify.config';
+import { container } from './inversify.config';
 
 export class Index {
     constructor(private filePullerService: FilePullerService) { }
@@ -14,5 +14,5 @@ export class Index {
     }
 }
 
-const filePullerService = new Inversify().container.get(FilePullerService);
+const filePullerService = container.get(FilePullerService);
 new Index(filePullerService).Import();

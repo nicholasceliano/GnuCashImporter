@@ -1,15 +1,17 @@
 import { FilePullerService } from './filePuller.service';
+import { container } from '../../inversify.config';
+import '../../prototypes/string.prototype';
+import '../../prototypes/date.prototype';
+import '../../prototypes/number.prototype';
 
 describe('FilePullerService', () => {
-    // let service: FilePullerService;
+    let service: FilePullerService;
 
     beforeEach(() => {
-        // service = new FilePullerService();
+        service = container.get(FilePullerService);
     });
 
-    it('', () => {
-        // const resp = service.GetFilePrefix('ALLY_test1230492_test1234.csv');
-
-        // assert.equal(resp, 'ALLY');
+    xit('', () => {
+        service.ImportFilesFromDirectory();
     });
 });

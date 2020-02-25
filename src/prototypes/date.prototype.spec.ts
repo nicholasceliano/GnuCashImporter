@@ -1,9 +1,21 @@
+import './date.prototype';
+import { expect } from 'chai';
 
 describe('DatePrototype', () => {
 
-    it('', () => {
-        // const resp = service.GetFilePrefix('ALLY_test1230492_test1234.csv');
+    it('MySqlDateTime is formatted correctly when input as ISO time', () => {
+        const date = new Date('2/2/2020 10:30:33Z');
 
-        // assert.equal(resp, 'ALLY');
+        const resp = date.toMySqlDateTimeString();
+
+        expect(resp).to.eq('2020-02-02 10:30:33');
+    });
+
+    it('MySqlDateTime is formatted correctly when put in as local time', () => {
+        const date = new Date('2/2/2020 10:30:33');
+
+        const resp = date.toMySqlDateTimeString();
+
+        expect(resp).to.eq('2020-02-02 15:30:33');
     });
 });

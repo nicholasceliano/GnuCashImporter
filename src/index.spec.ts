@@ -1,3 +1,5 @@
+import 'mocha'
+import 'reflect-metadata';
 
 describe('Index', () => {
     it('', () => {
