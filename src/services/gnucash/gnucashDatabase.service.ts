@@ -5,20 +5,20 @@ import { v4 } from 'uuid'
 import { environment } from '../../environments/environment';
 import { GnuCashAccount } from '../../models/GnuCashAccount';
 import { GnuCashPriceService } from './gnucashPrice.service';
+import { injectable } from 'inversify';
 
+@injectable()
 export class GnuCashDatabaseService {
-	private gnuCashPrice: GnuCashPriceService;
 	private mySql: mysql.Connection;
 
-	constructor() {
-		this.gnuCashPrice = new GnuCashPriceService();
+	constructor(private gnuCashPrice: GnuCashPriceService) {
 		this.mySql = mysql.createConnection({
 			host: environment.gnuCashDatabase.host,
 			user: environment.gnuCashDatabase.user,
 			password: environment.gnuCashDatabase.password,
 			database: environment.gnuCashDatabase.database
 		});
-	}
+    }
 
     InsertTransactions(transactions: GnuCashTransaction[]): GnuCashImportMetaData {
 		// Fix ValueNum/Denom and QuantityNum/Denom for Investments
@@ -61,7 +61,7 @@ export class GnuCashDatabaseService {
 		return new Promise((resolve, reject) => {
 			let account: GnuCashAccount;
 
-			this.mySql.query(`SELECT 
+			this.mySql.query(`SELECT
 				guid, name, account_type, commodity_guid, parent_guid, hidden
 				FROM accounts WHERE guid='${accountId}' LIMIT 1`, (err, results) => {
 				if (err) reject(err);

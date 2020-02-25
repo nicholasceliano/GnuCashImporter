@@ -1,25 +1,21 @@
 import * as fs from 'fs';
 import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service';
-import { AllyBankService } from '../institutions/allyBank.service';
 import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { BankInstitution } from '../../models/BankInstitution';
 import { FileUtilityService } from './fileUtility.service';
 import { environment } from '../../environments/environment';
-import { TDAmeritradeService } from '../institutions/tdAmeritrade.service';
 import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData';
+import { SERVICE_REFERENCES } from '../../inversify.config';
+import { inject, injectable } from 'inversify';
 
+@injectable()
 export class FilePullerService {
-    private allyBank: AllyBankService;
-    private tdAmeritrade: TDAmeritradeService;
-    private fileUtility: FileUtilityService;
-    private gnuCash: GnuCashDatabaseService;
 
-    constructor() {
-        this.allyBank = new AllyBankService();
-        this.tdAmeritrade = new TDAmeritradeService();
-        this.fileUtility = new FileUtilityService();
-        this.gnuCash = new GnuCashDatabaseService();
-    }
+    constructor(
+        @inject(SERVICE_REFERENCES.AllyBank) private allyBank: BankInstitution,
+        @inject(SERVICE_REFERENCES.TdAmeritrade) private tdAmeritrade: BankInstitution,
+        private fileUtility: FileUtilityService,
+        private gnuCash: GnuCashDatabaseService) { }
 
     ImportFilesFromDirectory(): void {
         const dirName = environment.fileUploadDirectory;

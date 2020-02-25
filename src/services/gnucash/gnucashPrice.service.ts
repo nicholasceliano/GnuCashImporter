@@ -1,6 +1,8 @@
 import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { Fraction } from '../../models/Fraction';
+import { injectable } from 'inversify';
 
+@injectable()
 export class GnuCashPriceService {
 	SetTransactionValueFractions(transaction: GnuCashTransaction, initialSplit = true): GnuCashTransaction {
 		const valueFraction = this.calcValueFraction(initialSplit ? transaction.Amount : -transaction.Amount);

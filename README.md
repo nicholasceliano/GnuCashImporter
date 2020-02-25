@@ -8,4 +8,4 @@
 
 
 # TODO
-- Refactor to use DI?
+- Build in Electron front end

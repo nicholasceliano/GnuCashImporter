@@ -3,7 +3,9 @@ import { BankInstitution } from '../../models/BankInstitution';
 import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { AllyBankRecord } from '../../models/institutions/AllyBankRecord';
 import { environment } from '../../environments/environment';
+import { injectable } from 'inversify';
 
+@injectable()
 export class AllyBankService implements BankInstitution {
 
     ImportCSV(fileContent: string): GnuCashTransaction[] {
