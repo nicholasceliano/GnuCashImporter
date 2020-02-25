@@ -1,4 +1,4 @@
-# BankStatementToGnuCashDatabase
+# GnuCashImporter
 
 - prefix file an drop it in FileUploadDirectory
 

@@ -56,10 +56,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/nicholasceliano/BankStatementToGnuCashDatabase.git"
+        "url": "git+https://github.com/nicholasceliano/GnuCashImporter.git"
     },
     "bugs": {
-        "url": "https://github.com/nicholasceliano/BankStatementToGnuCashDatabase/issues"
+        "url": "https://github.com/nicholasceliano/GnuCashImporter/issues"
     },
-    "homepage": "https://github.com/nicholasceliano/BankStatementToGnuCashDatabase#readme"
+    "homepage": "https://github.com/nicholasceliano/GnuCashImporter#readme"
 }
