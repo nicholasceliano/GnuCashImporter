@@ -2,27 +2,31 @@
 
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import 'reflect-metadata';
-import { container } from './inversify.config';
-import { FilePullerService } from './services/file/filePuller.service';
-import { Index } from '.';
+import 'reflect-metadata'
+import { container } from './inversify.config'
+import { FilePullerService } from './services/file/filePuller.service'
+import { Index } from '.'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win: any;
+let win: BrowserWindow | null
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
-function createWindow () {
-    const filePullerService = container.get(FilePullerService);
-    new Index(filePullerService).Import();
+function createWindow (): void {
+  const filePullerService = container.get(FilePullerService)
+  new Index(filePullerService).Import()
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600, webPreferences: {
-    nodeIntegration: true
-  } })
+  win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

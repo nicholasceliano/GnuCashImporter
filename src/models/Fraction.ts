@@ -1,4 +1,4 @@
 export interface Fraction {
-    Numerator: number;
-    Denominator: number;
+  Numerator: number;
+  Denominator: number;
 }

@@ -5,7 +5,10 @@
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
-    "types": ["reflect-metadata", "webpack-env"],
+    "types": [
+      "reflect-metadata",
+      "webpack-env"
+    ],
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "allowJs": true,
@@ -28,6 +31,7 @@
   "exclude": [
     "src/**/*.spec.ts",
     "node_modules",
+    "dist_electron",
     "coverage"
   ]
 }

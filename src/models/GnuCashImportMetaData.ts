@@ -1,4 +1,4 @@
 export interface GnuCashImportMetaData {
-    EarliestRecordDate: Date;
-    LatestRecordDate: Date;
+  EarliestRecordDate: Date;
+  LatestRecordDate: Date;
 }

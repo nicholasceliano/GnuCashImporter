@@ -2,11 +2,9 @@
   "name": "gnucashimporter",
   "version": "1.0.0",
   "description": "Insert Bank Statement to GnuCash SQL database",
-  "main": "background.js",
+  "author": "Nicholas Celiano",
   "scripts": {
-    "dev": "nodemon",
-    "build": "rimraf ./build && tsc",
-    "lint": "eslint ./src/**",
+    "lint": "vue-cli-service lint",
     "build:vue": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
@@ -16,20 +14,7 @@
     "test": "mocha -w",
     "test-coverage": "nyc mocha && open-cli ./coverage/index.html"
   },
-  "nyc": {
-    "exclude": [
-      "**/*.spec.ts",
-      "build",
-      "coverage",
-      "src/environments"
-    ],
-    "reporter": [
-      "html"
-    ],
-    "all": true
-  },
-  "author": "Nicholas Celiano",
-  "license": "ISC",
+  "main": "background.js",
   "dependencies": {
     "csv-parse": "^4.8.6",
     "electron": "^8.0.1",
@@ -51,12 +36,20 @@
     "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
     "@typescript-eslint/parser": "^2.20.0",
+    "@vue/cli-plugin-eslint": "^4.2.2",
     "@vue/cli-plugin-typescript": "^4.2.2",
     "@vue/cli-service": "~4.2.0",
+    "@vue/eslint-config-standard": "^5.1.0",
+    "@vue/eslint-config-typescript": "^5.0.1",
     "chai": "^4.2.0",
     "electron": "^6.0.0",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.1.2",
     "mocha": "^7.0.1",
     "nodemon": "^2.0.2",
     "nyc": "^15.0.0",
@@ -68,12 +61,25 @@
     "vue-cli-plugin-electron-builder": "~1.4.5",
     "vue-template-compiler": "^2.6.11"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nicholasceliano/GnuCashImporter.git"
-  },
   "bugs": {
     "url": "https://github.com/nicholasceliano/GnuCashImporter/issues"
   },
-  "homepage": "https://github.com/nicholasceliano/GnuCashImporter#readme"
+  "homepage": "https://github.com/nicholasceliano/GnuCashImporter#readme",
+  "license": "ISC",
+  "nyc": {
+    "exclude": [
+      "**/*.spec.ts",
+      "build",
+      "coverage",
+      "src/environments"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicholasceliano/GnuCashImporter.git"
+  }
 }

@@ -1,8 +1,8 @@
-const electron = require('electron')
+import electron from 'electron'
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 
-let url: any;
+let url: string
 if (process.env.NODE_ENV === 'DEV') {
   url = 'http://localhost:8080/'
 } else {
@@ -10,6 +10,6 @@ if (process.env.NODE_ENV === 'DEV') {
 }
 
 app.on('ready', () => {
-  let window = new BrowserWindow({width: 800, height: 600})
+  const window = new BrowserWindow({ width: 800, height: 600 })
   window.loadURL(url)
 })
