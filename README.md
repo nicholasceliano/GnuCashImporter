@@ -3,9 +3,8 @@
 - prefix file an drop it in FileUploadDirectory
 
 - npm run dev
-- npm run build
-- npm run prod
-
+- npm run serve:vue
+- npm run electron:serve
 
 # TODO
 - Build in Electron front end

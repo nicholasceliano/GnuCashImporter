@@ -3,6 +3,7 @@
         "**/build": true,
         "**/node_modules": true,
         "**/.nyc_output": true,
-        "**/coverage": true
+        "**/coverage": true,
+        "**/dist_electron": true
     }
 }

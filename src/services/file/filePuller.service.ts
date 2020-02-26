@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service';
 import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { BankInstitution } from '../../models/BankInstitution';
@@ -15,8 +15,8 @@ export class FilePullerService {
     constructor(
         @inject(AllyBankService) private allyBank: BankInstitution,
         @inject(TDAmeritradeService) private tdAmeritrade: BankInstitution,
-        private fileUtility: FileUtilityService,
-        private gnuCash: GnuCashDatabaseService) { }
+        @inject(FileUtilityService) private fileUtility: FileUtilityService,
+        @inject(GnuCashDatabaseService) private gnuCash: GnuCashDatabaseService) { }
 
     ImportFilesFromDirectory(): void {
         const dirName = environment.fileUploadDirectory;

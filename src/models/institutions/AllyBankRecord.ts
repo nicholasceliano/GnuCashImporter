@@ -1,7 +1,7 @@
 export interface AllyBankRecord {
     Date: string;
     Time: string;
-    Amount: number;
+    Amount: string;
     Type: string;
     Description: string;
 }

@@ -1,17 +1,17 @@
 import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData';
-import mysql = require('mysql');
+import * as mysql from 'mysql';
 import { v4 } from 'uuid'
 import { environment } from '../../environments/environment';
 import { GnuCashAccount } from '../../models/GnuCashAccount';
 import { GnuCashPriceService } from './gnucashPrice.service';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 @injectable()
 export class GnuCashDatabaseService {
     private mySql: mysql.Connection;
 
-    constructor(private gnuCashPrice: GnuCashPriceService) {
+    constructor(@inject(GnuCashPriceService) private gnuCashPrice: GnuCashPriceService) {
         this.mySql = mysql.createConnection({
             host: environment.gnuCashDatabase.host,
             user: environment.gnuCashDatabase.user,
@@ -62,11 +62,11 @@ export class GnuCashDatabaseService {
     private getAccountByGuid(accountId: string): Promise<GnuCashAccount> {
         return new Promise((resolve, reject) => {
             let account: GnuCashAccount;
-
+            
             this.mySql.query(`SELECT
 				guid, name, account_type, commodity_guid, parent_guid, hidden
 				FROM accounts WHERE guid='${accountId}' LIMIT 1`, (err, results) => {
-                if (err) reject(err);
+                if (err) return reject(err);
 
                 results.forEach((r: GnuCashAccount) => {
                     account = r;

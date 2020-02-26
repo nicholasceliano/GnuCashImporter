@@ -1,4 +1,4 @@
-import parse = require('csv-parse/lib/sync');
+import parse from 'csv-parse/lib/sync';
 import { BankInstitution } from '../../models/BankInstitution';
 import { GnuCashTransaction } from '../../models/GnuCashTransaction';
 import { AllyBankRecord } from '../../models/institutions/AllyBankRecord';
@@ -32,7 +32,7 @@ export class AllyBankService implements BankInstitution {
             transactions.push({
                 AccountGuid: environment.gnuCashAccountGuid.ally,
                 Description: r.Description,
-                Amount: r.Amount,
+                Amount: parseFloat(r.Amount),
                 PostDate: new Date(`${r.Date} ${r.Time}Z`),
                 CreateDate: new Date()
             } as GnuCashTransaction);
