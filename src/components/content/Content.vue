@@ -1,7 +1,6 @@
 <template>
   <div id="content">
-    <br />
-    <span>Content</span>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -16,7 +15,6 @@ export default class Content extends Vue {}
 #content {
   padding-left: 10px;
   height: 100%;
-  width: 90% - 1px;
-  display: inline-block;
+  display: flex;
 }
 </style>

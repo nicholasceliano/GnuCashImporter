@@ -1,7 +1,9 @@
 <template>
   <div id="sidebar">
     <br />
-    <div v-for="item in sideBarLinks" :key="item.name">{{item.name}}</div>
+    <div v-for="item in sideBarLinks" :key="item.name">
+      <router-link v-bind:to="item.route">{{item.name}}</router-link>
+    </div>
   </div>
 </template>
 
@@ -14,12 +16,15 @@ export default class SideBar extends Vue {
 
   private sideBarLinks = [
     {
+      route: 'fileimporter',
       name: 'File Importer'
     },
     {
+      route: 'quoteimporter',
       name: 'Quote Importer'
     },
     {
+      route: 'databasebackup',
       name: 'Database Backup'
     }
   ]
@@ -28,10 +33,20 @@ export default class SideBar extends Vue {
 
 <style scoped>
 #sidebar {
-  width: 10%;
   height: 100%;
-  float:left;
+  width: 10%;
+  min-width: 150px;
+  float: left;
   border-right: 1px solid grey;
-  padding-left:10px;
+  padding-left: 10px;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.router-link-active {
+  font-weight: bold;
 }
 </style>
