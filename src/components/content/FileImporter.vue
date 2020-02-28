@@ -7,12 +7,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { ipcRenderer } from 'electron'
+import { ElectronApi } from '../../communication/commSwitch'
 
 @Component
 export default class FileImporter extends Vue {
   importFiles() {
-    ipcRenderer.send('import-files')
+    ElectronApi.send('import-files')
   }
 }
 </script>
