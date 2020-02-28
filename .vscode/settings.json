@@ -1,9 +1,9 @@
 {
-    "files.exclude": {
-        "**/build": true,
-        "**/node_modules": true,
-        "**/.nyc_output": true,
-        "**/coverage": true,
-        "**/dist_electron": true
-    }
+  "files.exclude": {
+    "**/build": true,
+    "**/node_modules": true,
+    "**/.nyc_output": true,
+    "**/coverage": true,
+    "**/dist_electron": true
+  }
 }

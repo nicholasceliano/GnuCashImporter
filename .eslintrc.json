@@ -26,6 +26,7 @@
       "error",
       "single"
     ],
+    "space-before-function-paren": "off",
     "no-useless-constructor": "off",
     "no-extend-native": "off",
     "no-unused-expressions": "off",
