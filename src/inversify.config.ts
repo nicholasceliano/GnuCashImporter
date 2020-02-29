@@ -5,6 +5,7 @@ import { TDAmeritradeService } from './services/institutions/tdAmeritrade.servic
 import { AllyBankService } from './services/institutions/allyBank.service'
 import { FilePullerService } from './services/file/filePuller.service'
 import { GnuCashDatabaseService } from './services/gnucash/gnucashDatabase.service'
+import { ConfigurationService } from './services/configuration.service'
 
 const container = new Container()
 
@@ -14,5 +15,6 @@ container.bind<FileUtilityService>(FileUtilityService).toSelf()
 container.bind<FilePullerService>(FilePullerService).toSelf()
 container.bind<AllyBankService>(AllyBankService).toSelf()
 container.bind<TDAmeritradeService>(TDAmeritradeService).toSelf()
+container.bind<ConfigurationService>(ConfigurationService).toSelf()
 
 export { container }

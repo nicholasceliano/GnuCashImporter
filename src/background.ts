@@ -1,6 +1,7 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-require('./communication/endpoints/fileImporter');
+require('./communication/endpoints/fileImporter')
+require('./communication/endpoints/configuration')
 require('./prototypes/date.prototype')
 require('./prototypes/number.prototype')
 require('./prototypes/string.prototype')
@@ -33,7 +34,7 @@ function createWindow(): void {
   })
 }
 
-app.allowRendererProcessReuse = true;
+app.allowRendererProcessReuse = true
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

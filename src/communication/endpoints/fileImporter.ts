@@ -5,6 +5,6 @@ import { ipcMain } from 'electron'
 
 ipcMain.on('import-files', () => {
   const filePullerService = container.get(FilePullerService)
-  console.log('Starting...')
+  console.log('Starting File Import...')
   filePullerService.ImportFilesFromDirectory()
 })
