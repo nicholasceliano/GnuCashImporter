@@ -2,16 +2,24 @@
   <div>
     <div id="title-bar" v-if="isElectron">
       <div id="title-bar-btns">
-        <div id="min-btn" @click="minimize()"></div>
-        <div id="max-btn" @click="maximizeResize()"></div>
-        <div id="close-btn" @click="close()"></div>
+        <div class="window-btn min-btn" @click="minimize()"></div>
+        <div class="window-btn max-btn" @click="maximizeResize()"></div>
+        <div class="window-btn close-btn" @click="close()"></div>
       </div>
     </div>
     <div id="header">
-      <div id="title">GnuCash Importer</div>
+      <img src="@/assets/logo.png" alt />
+      <div id="title">
+        <b>GnuCash</b> Importer
+      </div>
       <div id="configSelection" @click="showConfigModal()">
-        <span>Database:</span>
-        <span>{{databaseName}}</span>
+        <font-awesome-icon icon="cog" class="fa-btn" />
+        <div>
+          <span>
+            <b>Database:</b>
+          </span>
+          <span>{{databaseName}}</span>
+        </div>
       </div>
       <ConfigModal :configData="configData" v-on:saveConfig="saveConfigHandler"></ConfigModal>
     </div>
@@ -99,30 +107,54 @@ export default class Header extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/global.scss';
+
 #header {
   overflow: hidden;
   width: 100%;
-  height: 40px;
-  border-bottom: 1px solid grey;
-  padding-bottom: 15px;
-}
+  height: 55px;
+  border-bottom: 1px solid $line;
+  background-color: $lightgreen;
 
-#configSelection {
-  height: 100%;
-  float: right;
-}
+  img {
+    float: left;
+    height: 100%;
+  }
 
-#title {
-  height: 100%;
-  float: left;
-  font-size: 40px;
-  padding-left: 10px;
+  #configSelection {
+    height: calc(100% - 6px);
+    float: right;
+    margin: 3px;
+
+    svg {
+      display: block;
+      margin: auto;
+      padding-bottom: 3px;
+      width: 22px;
+      height: 22px;
+    }
+
+    span {
+      text-align: center;
+      display: block;
+      font-size: 11px;
+      line-height: 11px;
+    }
+  }
+
+  #title {
+    font-size: 25px;
+    line-height: 35px;
+    height: calc(100% - 20px);
+    float: left;
+    margin: 10px;
+  }
 }
 
 #title-bar {
   -webkit-app-region: drag;
   height: 24px;
-  background-color: grey;
+  background-color: $darkgray;
 }
 
 #title-bar-btns {
@@ -131,34 +163,7 @@ export default class Header extends Vue {
   float: right;
 }
 
-#title-bar-btns div {
+#title-bar-btns .window-button {
   display: inline-block;
-  cursor: pointer;
-  width: 13px;
-  margin: 5px 3px;
-  border-radius: 5px;
-  border: 1px solid lightgray;
-  height: 13px;
-}
-
-#min-btn {
-  background-color: rgba(255, 190, 68, 0.5);
-  &:hover {
-    background-color: rgba(255, 190, 68, 1);
-  }
-}
-
-#max-btn {
-  background-color: rgba(0, 202, 78, 0.5);
-  &:hover {
-    background-color: rgba(0, 202, 78, 1);
-  }
-}
-
-#close-btn {
-  background-color: rgba(255, 96, 92, 0.5);
-  &:hover {
-    background-color: rgba(255, 96, 92, 1);
-  }
 }
 </style>

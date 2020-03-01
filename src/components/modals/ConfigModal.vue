@@ -1,39 +1,41 @@
 <template>
   <modal name="configModal" @before-open="beforeOpen" @closed="closed" width="300" height="auto">
-    <div id="header">
-      <div class="title">Configuration</div>
-      <div class="close-button" @click="$modal.hide(modelName)">❌</div>
-    </div>
-    <div id="body" v-if="configData">
-      <div>
-        <div>GnuCash Database</div>
-        <div class="input-item">
-          <div class="label">Host:</div>
-          <input type="text" v-model="configData.GnuCashDbConn.Host" />
+    <div id="databaseModal">
+      <div id="header">
+        <div class="title">Configuration</div>
+        <div class="window-btn close-btn" @click="$modal.hide(modelName)"></div>
+      </div>
+      <div id="body" v-if="configData">
+        <div>
+          <div class="section-title">GnuCash Database</div>
+          <div class="input-item">
+            <div class="label">Host:</div>
+            <input type="text" v-model="configData.GnuCashDbConn.Host" />
+          </div>
+          <div class="input-item">
+            <div class="label">Database:</div>
+            <input type="text" v-model="configData.GnuCashDbConn.Database" />
+          </div>
+          <div class="input-item">
+            <div class="label">User:</div>
+            <input type="text" v-model="configData.GnuCashDbConn.User" />
+          </div>
+          <div class="input-item">
+            <div class="label">Password:</div>
+            <input type="password" v-model="configData.GnuCashDbConn.Password" />
+          </div>
         </div>
-        <div class="input-item">
-          <div class="label">Database:</div>
-          <input type="text" v-model="configData.GnuCashDbConn.Database" />
-        </div>
-        <div class="input-item">
-          <div class="label">User:</div>
-          <input type="text" v-model="configData.GnuCashDbConn.User" />
-        </div>
-        <div class="input-item">
-          <div class="label">Password:</div>
-          <input type="password" v-model="configData.GnuCashDbConn.Password" />
+        <div>
+          <div class="section-title">AlphaVantage</div>
+          <div class="input-item">
+            <div class="label">API Key</div>
+            <input type="text" v-model="configData.AlphaVantageApiKey" />
+          </div>
         </div>
       </div>
-      <div>
-        <div>AlphaVantage</div>
-        <div class="input-item">
-          <div class="label">API Key</div>
-          <input type="text" v-model="configData.AlphaVantageApiKey" />
-        </div>
+      <div id="footer">
+        <font-awesome-icon icon="save" class="fa-btn" @click="saveConfig" />
       </div>
-    </div>
-    <div id="footer">
-      <div class="button" @click="saveConfig">Save</div>
     </div>
   </modal>
 </template>
@@ -51,7 +53,7 @@ export default class DatabaseModal extends Vue {
 
   beforeOpen() {
     this.saved = false
-    this.originalData = Object.assign({}, this.configData)
+    this.originalData = JSON.parse(JSON.stringify(this.configData))
   }
 
   closed() {
@@ -79,27 +81,37 @@ export default class DatabaseModal extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/global.scss';
+
 #databaseModal {
-  padding: 10px;
+  background-color: $lightgreen;
 }
 #header {
-  height: 15%;
+  height: 15px;
   padding: 10px;
 
   .title {
-    display: inline-block;
-    font-size: 20px;
+    float: left;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 15px;
   }
 
-  .close-button {
+  .close-btn {
     float: right;
-    cursor: pointer;
+    border-color: $darkgray;
+    margin: 0;
   }
 }
 
 #body {
-  height: 70%;
+  height: calc(85% - 42px - 20px);
   padding: 10px;
+  font-size: 12px;
+
+  .section-title {
+    font-size: 14px;
+  }
 
   .input-item {
     margin: auto;
@@ -112,19 +124,25 @@ export default class DatabaseModal extends Vue {
 
     input {
       width: 120px;
+      border: 0;
+      border-bottom: 1px solid $darkgray;
+      background-image: none;
+      background-color: transparent;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
     }
   }
 }
 
 #footer {
-  border-top: 1px solid lightgray;
-  height: 15%;
+  height: 22px;
   padding: 10px;
 
-  .button {
-    text-align: right;
-    cursor: pointer;
-    font-weight: bold;
+  .fa-btn {
+    float: right;
+    height: 22px;
+    width: 22px;
   }
 }
 </style>

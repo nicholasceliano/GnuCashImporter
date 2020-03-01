@@ -1,6 +1,5 @@
 <template>
   <div id="sidebar">
-    <br />
     <div v-for="item in sideBarLinks" :key="item.name">
       <router-link v-bind:to="item.route">{{item.name}}</router-link>
     </div>
@@ -32,13 +31,16 @@ export default class SideBar extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/global.scss';
+
 #sidebar {
   height: 100%;
   width: 10%;
   min-width: 150px;
   float: left;
-  border-right: 1px solid grey;
+  border-right: 1px solid $line;
   padding-left: 10px;
+  background-color: $lightgreen-secondary;
 
   a {
     color: inherit;

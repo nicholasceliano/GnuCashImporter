@@ -34,16 +34,5 @@ export default class App extends Vue {}
 </style>
 
 <style lang="scss">
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-#app {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-}
+@import '@/global.scss';
 </style>

@@ -1,0 +1,57 @@
+$darkgray: #444444;
+$lightgreen: darkseagreen;
+$lightgreen-secondary: rgba($lightgreen, 0.6);
+$lightgreen-tertiary: rgba($lightgreen, 0.4);
+$line: #adadad;
+$close-red: #ff605c;
+$max-green: #00ca4e;
+$min-yellow: #ffbe44;
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Cairo';
+}
+
+#app {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.window-btn {
+  cursor: pointer;
+  width: 13px;
+  margin: 5px 3px;
+  border-radius: 5px;
+  border: 1px solid $line;
+  height: 13px;display: inline-block;
+}
+
+.min-btn {
+  background-color: rgba($min-yellow, 0.5);
+  &:hover {
+    background-color: $min-yellow;
+  }
+}
+
+.max-btn {
+  background-color: rgba($max-green, 0.5);
+  &:hover {
+    background-color: $max-green;
+  }
+}
+
+.close-btn {
+  background-color: rgba($close-red, 0.5);
+  &:hover {
+    background-color: $close-red;
+  }
+}
+
+.fa-btn {
+  color: $darkgray;
+  cursor: pointer;
+}

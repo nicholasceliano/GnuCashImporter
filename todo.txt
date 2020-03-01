@@ -1,11 +1,7 @@
 - encrypt database info in config file
 
 UI
-- add colors
-- add header image
-- add font-awesome
 - add sidebar collapse to link image icons
-- add config colors
 
 File Import
 - add option to select files
