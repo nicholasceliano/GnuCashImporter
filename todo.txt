@@ -1,0 +1,26 @@
+- encrypt database info in config file
+
+UI
+- add colors
+- add header image
+- add font-awesome
+- add sidebar collapse to link image icons
+- add config colors
+
+File Import
+- add option to select files
+  - add option to select institution for file selection
+  - add option to select account for file selection
+    - maybe add both of these to the config section?...maybe in future
+- add option to select reconcile accounts after data parse, but before insert call
+- log insert results back to user
+
+Quote Puller
+- port code over from python
+- allow to be manually run with button
+- display output results
+
+Database backup
+- port code from python
+- allow to be manually run with button
+- display output results

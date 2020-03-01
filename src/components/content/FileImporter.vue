@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { ElectronApi } from '../../communication/commSwitch'
+import { ElectronApi } from '@/communication/electronSwitch'
 
 @Component
 export default class FileImporter extends Vue {
@@ -17,5 +17,5 @@ export default class FileImporter extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 </style>

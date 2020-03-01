@@ -11,7 +11,7 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class Content extends Vue {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #content {
   padding-left: 10px;
   height: 100%;

@@ -26,17 +26,18 @@ import { router } from './router'
 export default class App extends Vue {}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #page {
   display: inline-block;
   flex-grow: 1;
 }
 </style>
 
-<style>
+<style lang="scss">
 html,
 body {
   margin: 0;
+  padding: 0;
   height: 100%;
 }
 

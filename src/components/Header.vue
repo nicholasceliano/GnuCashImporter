@@ -1,18 +1,31 @@
 <template>
-  <div id="header">
-    <div id="title">GnuCash Importer</div>
-    <div id="configSelection" @click="showConfigModal()">
-      <span>Database:</span>
-      <span>{{databaseName}}</span>
+  <div>
+    <div id="title-bar" v-if="isElectron">
+      <div id="title-bar-btns">
+        <div id="min-btn" @click="minimize()"></div>
+        <div id="max-btn" @click="maximizeResize()"></div>
+        <div id="close-btn" @click="close()"></div>
+      </div>
     </div>
-    <ConfigModal :configData="configData" v-on:saveConfig="saveConfigHandler"></ConfigModal>
+    <div id="header">
+      <div id="title">GnuCash Importer</div>
+      <div id="configSelection" @click="showConfigModal()">
+        <span>Database:</span>
+        <span>{{databaseName}}</span>
+      </div>
+      <ConfigModal :configData="configData" v-on:saveConfig="saveConfigHandler"></ConfigModal>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import ConfigModal from './modals/ConfigModal.vue'
-import { ElectronApi } from '@/communication/commSwitch'
+import {
+  ElectronApi,
+  ElectronWindow,
+  isElectron
+} from '@/communication/electronSwitch'
 import { ConfigurationData } from '@/models/ConfigurationData'
 
 @Component({
@@ -24,6 +37,7 @@ export default class Header extends Vue {
   private configModal = 'configModal'
   private configData!: ConfigurationData
   private databaseName!: string
+  private isElectron = false
 
   data() {
     return {
@@ -34,6 +48,19 @@ export default class Header extends Vue {
 
   async beforeMount() {
     await this.getConfig()
+    this.isElectron = isElectron
+  }
+
+  close() {
+    ElectronWindow.close()
+  }
+
+  minimize() {
+    ElectronWindow.minimize()
+  }
+
+  maximizeResize() {
+    ElectronWindow.maximizeResize()
   }
 
   saveConfigHandler(configData: ConfigurationData) {
@@ -71,22 +98,67 @@ export default class Header extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #header {
-  display: inline-block;
+  overflow: hidden;
   width: 100%;
   height: 40px;
   border-bottom: 1px solid grey;
   padding-bottom: 15px;
 }
+
 #configSelection {
   height: 100%;
   float: right;
 }
+
 #title {
   height: 100%;
   float: left;
   font-size: 40px;
   padding-left: 10px;
+}
+
+#title-bar {
+  -webkit-app-region: drag;
+  height: 24px;
+  background-color: grey;
+}
+
+#title-bar-btns {
+  -webkit-app-region: no-drag;
+  height: 24px;
+  float: right;
+}
+
+#title-bar-btns div {
+  display: inline-block;
+  cursor: pointer;
+  width: 13px;
+  margin: 5px 3px;
+  border-radius: 5px;
+  border: 1px solid lightgray;
+  height: 13px;
+}
+
+#min-btn {
+  background-color: rgba(255, 190, 68, 0.5);
+  &:hover {
+    background-color: rgba(255, 190, 68, 1);
+  }
+}
+
+#max-btn {
+  background-color: rgba(0, 202, 78, 0.5);
+  &:hover {
+    background-color: rgba(0, 202, 78, 1);
+  }
+}
+
+#close-btn {
+  background-color: rgba(255, 96, 92, 0.5);
+  &:hover {
+    background-color: rgba(255, 96, 92, 1);
+  }
 }
 </style>

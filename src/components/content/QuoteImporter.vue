@@ -10,5 +10,5 @@ export default class QuoteImporter extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 </style>

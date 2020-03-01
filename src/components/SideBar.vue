@@ -31,7 +31,7 @@ export default class SideBar extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #sidebar {
   height: 100%;
   width: 10%;
@@ -39,14 +39,14 @@ export default class SideBar extends Vue {
   float: left;
   border-right: 1px solid grey;
   padding-left: 10px;
-}
 
-a {
-  color: inherit;
-  text-decoration: inherit;
-}
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
 
-.router-link-active {
-  font-weight: bold;
+  .router-link-active {
+    font-weight: bold;
+  }
 }
 </style>

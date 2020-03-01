@@ -78,45 +78,53 @@ export default class DatabaseModal extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #databaseModal {
   padding: 10px;
 }
 #header {
   height: 15%;
   padding: 10px;
+
+  .title {
+    display: inline-block;
+    font-size: 20px;
+  }
+
+  .close-button {
+    float: right;
+    cursor: pointer;
+  }
 }
-.title {
-  display: inline-block;
-  font-size: 20px;
-}
-.close-button {
-  float: right;
-  cursor: pointer;
-}
+
 #body {
   height: 70%;
   padding: 10px;
+
+  .input-item {
+    margin: auto;
+    width: 200px;
+
+    .label {
+      width: 70px;
+      display: inline-block;
+    }
+
+    input {
+      width: 120px;
+    }
+  }
 }
-.label {
-  width: 70px;
-  display: inline-block;
-}
-.input-item {
-  margin: auto;
-  width: 200px;
-}
-input {
-  width: 120px;
-}
+
 #footer {
   border-top: 1px solid lightgray;
   height: 15%;
   padding: 10px;
-}
-.button {
-  text-align: right;
-  cursor: pointer;
-  font-weight: bold;
+
+  .button {
+    text-align: right;
+    cursor: pointer;
+    font-weight: bold;
+  }
 }
 </style>
