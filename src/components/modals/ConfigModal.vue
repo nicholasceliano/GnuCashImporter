@@ -45,7 +45,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { ConfigurationData } from '@/models/ConfigurationData'
 
 @Component
-export default class DatabaseModal extends Vue {
+export default class ConfigModal extends Vue {
   public modelName = 'configModal'
   @Prop() configData!: ConfigurationData
   private originalData!: ConfigurationData

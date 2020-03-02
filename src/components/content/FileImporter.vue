@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <h1>FileImporter</h1>
+  <div class="container">
+    <div>FileImporter</div>
+    <FileUpload uploadFieldName="fileImporterUpload" acceptedFiles=".csv"></FileUpload>
     <button @click="importFiles()">Import Files</button>
   </div>
 </template>
@@ -8,8 +9,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { ElectronApi } from '@/communication/electronSwitch'
+import FileUpload from '@/components/FileUpload.vue'
 
-@Component
+@Component({
+  components: {
+    FileUpload
+  }
+})
 export default class FileImporter extends Vue {
   importFiles() {
     ElectronApi.send('import-files')
@@ -18,4 +24,7 @@ export default class FileImporter extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.container {
+  width:100%;
+}
 </style>
