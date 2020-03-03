@@ -6,6 +6,7 @@ import { AllyBankService } from './services/institutions/allyBank.service'
 import { FilePullerService } from './services/file/filePuller.service'
 import { GnuCashDatabaseService } from './services/gnucash/gnucashDatabase.service'
 import { ConfigurationService } from './services/configuration.service'
+import { TransactionParserService } from './services/file/transactionParser.service'
 
 const container = new Container()
 
@@ -16,5 +17,6 @@ container.bind<FilePullerService>(FilePullerService).toSelf()
 container.bind<AllyBankService>(AllyBankService).toSelf()
 container.bind<TDAmeritradeService>(TDAmeritradeService).toSelf()
 container.bind<ConfigurationService>(ConfigurationService).toSelf()
+container.bind<TransactionParserService>(TransactionParserService).toSelf()
 
 export { container }

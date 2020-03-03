@@ -4,12 +4,12 @@ import { injectable } from 'inversify'
 
 @injectable()
 export class TDAmeritradeService implements BankInstitution {
-  ImportCSV (fileContent: string): GnuCashTransaction[] {
+  ParseCSV (fileContent: string): GnuCashTransaction[] {
     console.log(fileContent)
     throw Error('Not Implemented')
   }
 
-  ImportPDF (): GnuCashTransaction[] {
+  ParsePDF (): GnuCashTransaction[] {
     throw Error('Not Implemented')
   }
 }

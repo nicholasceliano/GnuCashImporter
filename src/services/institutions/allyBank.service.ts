@@ -7,14 +7,14 @@ import { injectable } from 'inversify'
 
 @injectable()
 export class AllyBankService implements BankInstitution {
-  ImportCSV (fileContent: string): GnuCashTransaction[] {
+  ParseCSV (fileContent: string): GnuCashTransaction[] {
     const records = this.parseCSV(fileContent)
     const transactions = this.mapAllBankRecordsToGnuCashTransactions(records)
 
     return transactions
   }
 
-  ImportPDF (): GnuCashTransaction[] {
+  ParsePDF (): GnuCashTransaction[] {
     throw Error('Not Implemented')
   }
 

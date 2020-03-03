@@ -6,12 +6,12 @@
           type="file"
           multiple
           :name="uploadFieldName"
-          @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length"
+          @change="filesChange($event.target.files)"
           :accept="acceptedFiles"
           class="input-file"
         />
-        <p v-if="fileCount === 0">Drag your file(s) here to begin or click to browse</p>
-        <p v-if="fileCount > 0">Uploaded {{ fileCount }} files...</p>
+        <p v-if="uploadedFiles.length === 0">Drag your file(s) here to begin or click to browse</p>
+        <p v-if="uploadedFiles.length > 0">Uploaded {{ uploadedFiles.length }} files...</p>
       </div>
     </form>
   </div>
@@ -25,16 +25,10 @@ export default class FileUpload extends Vue {
   @Prop() acceptedFiles!: string
   @Prop() uploadFieldName!: string
 
-  private uploadedFiles = []
+  private uploadedFiles: File[] = []
   private fileCount = 0
 
-  data() {
-    return {
-      uploadedFiles: this.uploadedFiles
-    }
-  }
-
-  mounted() {
+  private mounted() {
     this.reset()
   }
 
@@ -42,14 +36,31 @@ export default class FileUpload extends Vue {
     this.uploadedFiles = []
   }
 
-  filesChange(fieldName: string, fileList: FileList) {
-    const formData = new FormData()
-
+  private filesChange(fileList: FileList) {
     if (!fileList.length) return
 
     Array.from(Array(fileList.length).keys()).map(x => {
-      formData.append(fieldName, fileList[x], fileList[x].name)
+      const uploadedFile = fileList[x]
+
+      if (!this.fileAlreadyUploaded(uploadedFile)) {
+        this.uploadedFiles.push(uploadedFile)
+      }
     })
+
+    this.$emit('filesChanged', this.uploadedFiles)
+  }
+
+  private fileAlreadyUploaded(file: File) {
+    return (
+      this.uploadedFiles.filter(
+        x =>
+          x.name === file.name &&
+          x.lastModified === file.lastModified &&
+          x.path === file.path &&
+          x.size === file.size &&
+          x.type === file.type
+      ).length > 0
+    )
   }
 }
 </script>
@@ -84,6 +95,8 @@ export default class FileUpload extends Vue {
 .dropbox p {
   font-size: 18px;
   text-align: center;
-  padding: 32px 0;
+  margin: 0;
+  padding:10px;
+  height: calc(100% - 20px);
 }
 </style>

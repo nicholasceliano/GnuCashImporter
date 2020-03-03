@@ -1,3 +1,4 @@
+- **check if transaction has already been imported before inserting new record
 - encrypt database info in config file
 
 UI
