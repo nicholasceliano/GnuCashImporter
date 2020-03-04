@@ -4,25 +4,53 @@
     <FileUpload
       uploadFieldName="fileImporterUpload"
       acceptedFiles=".csv"
+      ref="fileUpload"
       @filesChanged="filesChanged"
     ></FileUpload>
-    <div v-for="f in uploadedFiles" :key="f.Id">
-      <div>{{f.FileName}}</div>
-      <div>
-        <select name="importTypeList" v-model="f.ImportType">
-          <option>Select Import Type...</option>
-          <option value="ALLY">Ally</option>
-          <option value="TDAM">Td Ameritrade</option>
-        </select>
-      </div>
-      <div v-for="t in f.Transactions" :key="t.name">
-        <div>{{t.Description}}</div>
-        <div>{{t.Amount}}</div>
-        <div>{{t.PostDate}}</div>
-        <div>
-          Reconcile acc:
-          <select></select>
+    <div v-for="f in uploadedFiles" :key="f.FilePath">
+      <div class="fileDesc">
+        <div title="Import Type" class="descType">
+          <select
+            name="importTypeList"
+            v-model="f.ImportType"
+            v-bind:disabled="f.Transactions.length > 0"
+          >
+            <option value="undefined">Select Import Type...</option>
+            <option value="ALLY">Ally</option>
+            <option value="TDAM">Td Ameritrade</option>
+          </select>
         </div>
+        <div v-bind:title="f.FileName" class="descName">{{f.FileName}}</div>
+        <div title="Remove" class="descClose">
+          <font-awesome-icon icon="times" @click="removeFile(f.FilePath)" />
+        </div>
+      </div>
+      <div class="tableContainer">
+        <table class="transTable" v-if="f.Transactions.length > 0" cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th class="tblDescription">Description</th>
+              <th class="tblAmount">Amount</th>
+              <th class="tblDate">Date</th>
+              <th class="tblReconcileAccount">Reconcile Account</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="t in f.Transactions" :key="t.name">
+              <td v-bind:title="t.Description">{{t.Description}}</td>
+              <td v-bind:title="t.Amount.toDollars()">{{t.Amount.toDollars()}}</td>
+              <td
+                v-bind:title="t.PostDate.toMySqlDateTimeString()"
+              >{{t.PostDate.toMySqlDateTimeString()}}</td>
+              <td>
+                <select v-model="t.ReconcileAccountGuid">
+                  <option value="test">test</option>
+                  <option value="test2">test2</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <button @click="parseFiles()">Parse Files</button>
@@ -35,7 +63,6 @@ import { Component, Vue } from 'vue-property-decorator'
 import { ElectronApi } from '@/communication/electronSwitch'
 import FileUpload from '@/components/FileUpload.vue'
 import { GnuCashImportFile } from '../../models/GnuCashImportFile'
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
 
 @Component({
   components: {
@@ -44,31 +71,42 @@ import { GnuCashTransaction } from '../../models/GnuCashTransaction'
 })
 export default class FileImporter extends Vue {
   private uploadedFiles: GnuCashImportFile[] = []
+  private fileUploadComponent!: FileUpload
 
-  private filesChanged(uploadedFiles: File[]) {
-    this.uploadedFiles = []
+  mounted() {
+    this.fileUploadComponent = this.$refs.fileUpload as FileUpload
+  }
 
-    uploadedFiles.forEach(f => {
-      this.uploadedFiles.push({
-        Id: '12',
-        FilePath: f.path,
-        FileName: f.name,
-        Transactions: []
-      } as GnuCashImportFile)
+  private filesChanged(files: File[]) {
+    files.forEach(f => {
+      if (!this.fileAlreadyUploaded(f)) {
+        this.uploadedFiles.push({
+          FilePath: f.path,
+          FileName: f.name,
+          Transactions: []
+        } as GnuCashImportFile)
+      }
     })
+  }
+
+  private removeFile(filePath: string) {
+    this.uploadedFiles = this.uploadedFiles.filter(x => x.FilePath !== filePath)
+    this.fileUploadComponent.removeFile(filePath)
   }
 
   private parseFiles() {
     this.uploadedFiles.forEach(f => {
-      if (f.ImportType) {
-        new Promise<GnuCashTransaction[]>(resolve => {
+      if (f.ImportType && f.Transactions.length === 0) {
+        new Promise<GnuCashImportFile>(resolve => {
           ElectronApi.send('parse-files', f)
           ElectronApi.on(
             'parse-files-reply',
-            (event, result: GnuCashTransaction[]) => resolve(result)
+            (event, result: GnuCashImportFile) => resolve(result)
           )
-        }).then(transactions => {
-          f.Transactions = transactions
+        }).then(fileResp => {
+          if (f.FilePath === fileResp.FilePath) {
+            f.Transactions = fileResp.Transactions
+          }
         })
       }
     })
@@ -78,15 +116,87 @@ export default class FileImporter extends Vue {
     this.uploadedFiles.forEach(f => {
       if (f.Transactions.length > 0) {
         ElectronApi.send('import-files', f)
-        ElectronApi.on('import-files-reply', () => this.uploadedFiles = [])
+        ElectronApi.on('import-files-reply', () => {
+          // TODO: Need to rework this with Import result
+          // const fileUploadComponent = this.$refs.fileUpload as FileUpload
+          // fileUploadComponent.reset()
+        })
       }
     })
+  }
+
+  private fileAlreadyUploaded(f: File) {
+    return this.uploadedFiles.filter(x => x.FilePath === f.path).length > 0
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/global.scss';
+
 .container {
   width: 100%;
+}
+
+.fileDesc {
+  width: calc(100% - 10px);
+  padding-right: 10px;
+
+  div {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .descType {
+    width: 20%;
+    select {
+      width: 100%;
+    }
+  }
+  .descName {
+    width: calc(80% - 19px);
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+  .descClose {
+    width: 11px;
+    cursor: pointer;
+    color: $close-red;
+  }
+}
+
+.tableContainer {
+  width: calc(100% - 10px);
+  padding-right: 10px;
+}
+
+.transTable {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+
+  td,
+  th {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+  }
+  select {
+    width: 100%;
+  }
+  .tblDescription {
+    width: 45%;
+  }
+  .tblAmount {
+    width: 15%;
+  }
+  .tblDate {
+    width: 25%;
+  }
+  .tblReconcileAccount {
+    width: 20%;
+  }
 }
 </style>

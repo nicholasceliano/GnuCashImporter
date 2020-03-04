@@ -14,6 +14,8 @@ import Header from './components/Header.vue'
 import SideBar from './components/SideBar.vue'
 import Content from './components/content/Content.vue'
 import { router } from './router'
+require('@/prototypes/date.prototype')
+require('@/prototypes/number.prototype')
 
 @Component({
   components: {

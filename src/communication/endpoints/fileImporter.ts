@@ -13,10 +13,11 @@ ipcMain.on('import-files', (event, args: GnuCashImportFile) => {
   })
 })
 
-ipcMain.on('parse-files', (event, args: GnuCashImportFile) => {
+ipcMain.on('parse-files', (event, importFile: GnuCashImportFile) => {
   const transactionParserService = container.get(TransactionParserService)
   console.log('Starting File Parse...')
-  transactionParserService.GetTransactionsFromFile(args.FilePath, args.FileName, args.ImportType).then(transactions => {
-    event.reply('parse-files-reply', transactions)
+  transactionParserService.GetTransactionsFromFile(importFile.FilePath, importFile.FileName, importFile.ImportType).then(transactions => {
+    importFile.Transactions = transactions
+    event.reply('parse-files-reply', importFile)
   })
 })

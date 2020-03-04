@@ -5,7 +5,7 @@
         <input
           type="file"
           multiple
-          :name="uploadFieldName"
+          :ref="uploadFieldName"
           @change="filesChange($event.target.files)"
           :accept="acceptedFiles"
           class="input-file"
@@ -26,14 +26,22 @@ export default class FileUpload extends Vue {
   @Prop() uploadFieldName!: string
 
   private uploadedFiles: File[] = []
-  private fileCount = 0
+  private fileInput!: HTMLInputElement;
 
   private mounted() {
+    this.fileInput = this.$refs[this.uploadFieldName] as HTMLInputElement
     this.reset()
   }
 
   reset() {
+    this.fileInput.value = ''
     this.uploadedFiles = []
+    this.$emit('filesChanged', this.uploadedFiles)
+  }
+
+  removeFile(filePath: string) {
+    this.uploadedFiles = this.uploadedFiles.filter(x => x.path !== filePath)
+    this.removeFileFromFileList(filePath)
   }
 
   private filesChange(fileList: FileList) {
@@ -61,6 +69,22 @@ export default class FileUpload extends Vue {
           x.type === file.type
       ).length > 0
     )
+  }
+
+  private removeFileFromFileList(filePath: string) {
+    const fileInput = this.$refs[this.uploadFieldName] as HTMLInputElement
+    const fileArray = Array.from(fileInput.files as FileList)
+    const dt = new DataTransfer()
+
+    for (let i = 0; i < fileArray.length; i++) {
+      const f = fileArray[i]
+
+      if (f.path !== filePath) {
+        dt.items.add(f)
+      }
+    }
+
+    fileInput.files = dt.files
   }
 }
 </script>
@@ -96,7 +120,7 @@ export default class FileUpload extends Vue {
   font-size: 18px;
   text-align: center;
   margin: 0;
-  padding:10px;
+  padding: 10px;
   height: calc(100% - 20px);
 }
 </style>

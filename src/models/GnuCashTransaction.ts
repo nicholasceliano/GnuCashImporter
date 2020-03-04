@@ -4,6 +4,7 @@ export interface GnuCashTransaction {
   Amount: number; // Negative is Withdrawl, Positive is Deposit
   PostDate: Date;
   CreateDate: Date;
+  ReconcileAccountGuid?: string;
 
   CurrencyGuid?: string;
   TransactionGuid?: string;

@@ -1,5 +1,6 @@
 declare interface Number {
     reduce: (numerator: number, denominator: number) => number[];
+    toDollars: () => string;
 }
 
 ((): void => {
@@ -9,5 +10,9 @@ declare interface Number {
     }
     const greatesCommonDenom = gcd(numerator, denominator)
     return [numerator / greatesCommonDenom, denominator / greatesCommonDenom]
+  }
+
+  Number.prototype.toDollars = function (this: number): string {
+    return `$${this.toFixed(2)}`
   }
 })()
