@@ -14,7 +14,7 @@ export class FilePullerService {
     @inject(GnuCashDatabaseService) private gnuCash: GnuCashDatabaseService) { }
 
   ImportFiles(filePath: string, fileName: string, importType?: string): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.transactionParserService.GetTransactionsFromFile(filePath, fileName, importType).then(transactions => {
         const importMetaData = this.gnuCash.InsertTransactions(transactions)
 
@@ -36,7 +36,7 @@ export class FilePullerService {
     const destFolder = `${environment.fileUploadDirectory}/${environment.archiveFolderName}`
     const destFileName = `${importType}_${importMetaData.EarliestRecordDate.getTime()}_${importMetaData.LatestRecordDate.getTime()}${fileType}`
 
-    fs.exists(`${destFolder}/${destFileName}`, (exists) => {
+    fs.access(`${destFolder}/${destFileName}`, (exists) => {
       if (!exists) {
         fs.rename(filePath, `${destFolder}/${destFileName}`, (err) => {
           if (err) throw err

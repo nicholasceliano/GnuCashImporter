@@ -7,6 +7,7 @@ import { GnuCashAccount } from '../../models/GnuCashAccount'
 import { GnuCashPriceService } from './gnucashPrice.service'
 import { injectable, inject } from 'inversify'
 import { ConfigurationService } from '../configuration.service'
+import { GnuCashCurrency } from '@/models/GnuCashCurrency'
 
 @injectable()
 export class GnuCashDatabaseService {
@@ -14,13 +15,11 @@ export class GnuCashDatabaseService {
 
   constructor(@inject(GnuCashPriceService) private gnuCashPrice: GnuCashPriceService,
     @inject(ConfigurationService) private configService: ConfigurationService) {
-    this.configService.GetConfigData().then(configData => {
-      this.mySql = mysql.createConnection({
-        host: configData.GnuCashDbConn.Host,
-        user: configData.GnuCashDbConn.User,
-        password: configData.GnuCashDbConn.Password,
-        database: configData.GnuCashDbConn.Database
-      })
+    this.mySql = mysql.createConnection({
+      host: this.configService.ConfigData.GnuCashDbConn.Host,
+      user: this.configService.ConfigData.GnuCashDbConn.User,
+      password: this.configService.ConfigData.GnuCashDbConn.Password,
+      database: this.configService.ConfigData.GnuCashDbConn.Database
     })
   }
 
@@ -51,6 +50,24 @@ export class GnuCashDatabaseService {
     }
   }
 
+  GetCurrencies(): Promise<GnuCashCurrency[]> {
+    return new Promise((resolve, reject) => {
+      const currencies: GnuCashCurrency[] = []
+
+      this.mySql.query(`SELECT guid, namespace, mnemonic, fullname
+        FROM commodities
+        WHERE namespace = "CURRENCY"`, (err, results) => {
+        if (err) return reject(err)
+
+        results.forEach((r: GnuCashCurrency) => {
+          currencies.push(r)
+        })
+
+        resolve(currencies)
+      })
+    })
+  }
+
   private insertTransaction(transaction: GnuCashTransaction): void {
     this.mySql.query(`INSERT INTO transactions VALUES (
       '${transaction.TransactionGuid}',
@@ -69,7 +86,8 @@ export class GnuCashDatabaseService {
 
       this.mySql.query(`SELECT
         guid, name, account_type, commodity_guid, parent_guid, hidden
-        FROM accounts WHERE guid='${accountId}' LIMIT 1`, (err, results) => {
+        FROM accounts
+        WHERE guid='${accountId}' LIMIT 1`, (err, results) => {
         if (err) return reject(err)
 
         results.forEach((r: GnuCashAccount) => {

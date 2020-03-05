@@ -1,7 +1,9 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import 'reflect-metadata'
 require('./communication/endpoints/fileImporter')
 require('./communication/endpoints/configuration')
+require('./communication/endpoints/gnuCashRefData')
 require('./prototypes/date.prototype')
 require('./prototypes/number.prototype')
 require('./prototypes/string.prototype')

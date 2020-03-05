@@ -101,7 +101,11 @@ export default class FileImporter extends Vue {
           ElectronApi.send('parse-files', f)
           ElectronApi.on(
             'parse-files-reply',
-            (event, result: GnuCashImportFile) => resolve(result)
+            (event, result: GnuCashImportFile) => {
+              ElectronApi.removeAllListeners('parse-files-reply')
+
+              resolve(result)
+            }
           )
         }).then(fileResp => {
           if (f.FilePath === fileResp.FilePath) {
@@ -117,6 +121,8 @@ export default class FileImporter extends Vue {
       if (f.Transactions.length > 0) {
         ElectronApi.send('import-files', f)
         ElectronApi.on('import-files-reply', () => {
+          ElectronApi.removeAllListeners('import-files-reply')
+
           // TODO: Need to rework this with Import result
           // const fileUploadComponent = this.$refs.fileUpload as FileUpload
           // fileUploadComponent.reset()

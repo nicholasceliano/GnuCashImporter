@@ -16,7 +16,7 @@ container.bind<FileUtilityService>(FileUtilityService).toSelf()
 container.bind<FilePullerService>(FilePullerService).toSelf()
 container.bind<AllyBankService>(AllyBankService).toSelf()
 container.bind<TDAmeritradeService>(TDAmeritradeService).toSelf()
-container.bind<ConfigurationService>(ConfigurationService).toSelf()
+container.bind<ConfigurationService>(ConfigurationService).toSelf().inSingletonScope()
 container.bind<TransactionParserService>(TransactionParserService).toSelf()
 
 export { container }

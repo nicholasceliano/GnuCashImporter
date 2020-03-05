@@ -11,6 +11,10 @@ class RendererNotRunning implements RendererSwitch {
   send(channel: string, ...args: any[]): void {
     console.log(this.renderNotRunning)
   }
+
+  removeAllListeners(channel: string): void {
+    console.log(this.renderNotRunning)
+  }
 }
 
 const rendererNotRunning = new RendererNotRunning()

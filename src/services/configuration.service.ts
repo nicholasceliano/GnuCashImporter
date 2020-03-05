@@ -16,31 +16,40 @@ export class ConfigurationService {
     this.filePath = `${this.folderPath}\\${environment.userConfigFileName}`
   }
 
+  public ConfigData: ConfigurationData = {
+    GnuCashDbConn: { Host: '', Database: '', User: '', Password: '' },
+    GnuCashDefaults: { CurrencyGUID: '' },
+    AlphaVantageApiKey: ''
+  };
+
   GetConfigData(): Promise<ConfigurationData> {
     return new Promise((resolve) => {
       if (existsSync(this.appDataPath) && existsSync(this.filePath)) {
         readFile(this.filePath, (err, configData) => {
           if (err) throw err
-          const configDataObj = JSON.parse(configData.toString())
+          const configDataObj: ConfigurationData = JSON.parse(configData.toString())
 
-          resolve(configDataObj)
+          this.ConfigData = configDataObj
+          resolve(this.ConfigData)
         })
       } else {
-        resolve({
-          GnuCashDbConn: { Host: '', Database: '', User: '', Password: '' }, AlphaVantageApiKey: ''
-        })
+        resolve(this.ConfigData)
       }
     })
   }
 
   SaveConfigData(configData: ConfigurationData) {
-    if (!existsSync(this.folderPath)) {
-      mkdirSync(this.folderPath)
-    }
+    return new Promise((resolve) => {
+      if (!existsSync(this.folderPath)) {
+        mkdirSync(this.folderPath)
+      }
 
-    writeFile(this.filePath, JSON.stringify(configData), (err) => {
-      if (err) throw err
-      console.log('Config file has been saved')
+      writeFile(this.filePath, JSON.stringify(configData), (err) => {
+        if (err) throw err
+        console.log('Config file has been saved')
+        this.ConfigData = configData
+        resolve(this.ConfigData)
+      })
     })
   }
 }

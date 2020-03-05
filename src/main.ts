@@ -2,10 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import VModal from 'vue-js-modal'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCog, faSave, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faSave, faTimes, faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faCog, faSave, faTimes)
+library.add(faCog, faSave, faTimes, faSync)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

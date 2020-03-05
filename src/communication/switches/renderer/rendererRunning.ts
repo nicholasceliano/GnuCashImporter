@@ -10,6 +10,10 @@ class RendererRunning implements RendererSwitch {
   send(channel: string, ...args: any[]): void {
     ipcRenderer.send(channel, ...args)
   }
+
+  removeAllListeners(channel: string): Electron.IpcRenderer {
+    return ipcRenderer.removeAllListeners(channel);
+  }
 }
 
 const rendererRunning = new RendererRunning()

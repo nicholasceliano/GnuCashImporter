@@ -26,6 +26,15 @@
           </div>
         </div>
         <div>
+          <div class="section-title">GnuCash Defaults</div>
+          <div class="input-item">
+            <div class="label">Currency:</div>
+            <select v-model="configData.GnuCashDefaults.CurrencyGUID">
+              <option v-for="c in currencies" :value="c.guid" :key="c.guid">{{c.fullname}}</option>
+            </select>
+          </div>
+        </div>
+        <div>
           <div class="section-title">AlphaVantage</div>
           <div class="input-item">
             <div class="label">API Key</div>
@@ -34,7 +43,13 @@
         </div>
       </div>
       <div id="footer">
-        <font-awesome-icon icon="save" class="fa-btn" @click="saveConfig" />
+        <font-awesome-icon icon="save" class="fa-btn" title="Save" @click="saveConfigClick" />
+        <font-awesome-icon
+          icon="sync"
+          class="fa-btn sync"
+          title="Refresh"
+          @click="syncConfigClick"
+        />
       </div>
     </div>
   </modal>
@@ -43,20 +58,27 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { ConfigurationData } from '@/models/ConfigurationData'
+import { GnuCashCurrency } from '../../models/GnuCashCurrency'
+import { ElectronApi } from '@/communication/electronSwitch'
 
 @Component
 export default class ConfigModal extends Vue {
-  public modelName = 'configModal'
   @Prop() configData!: ConfigurationData
+  public modelName = 'configModal'
+  private currencies: GnuCashCurrency[] = []
   private originalData!: ConfigurationData
   private saved = false
 
-  beforeOpen() {
+  private async beforeMount() {
+    await this.getCurrencies()
+  }
+
+  private beforeOpen() {
     this.saved = false
     this.originalData = JSON.parse(JSON.stringify(this.configData))
   }
 
-  closed() {
+  private closed() {
     if (!this.saved) {
       this.configData.GnuCashDbConn.Host = this.originalData.GnuCashDbConn.Host
       this.configData.GnuCashDbConn.Database = this.originalData.GnuCashDbConn.Database
@@ -66,16 +88,42 @@ export default class ConfigModal extends Vue {
     }
   }
 
-  saveConfig() {
-    this.configData.GnuCashDbConn.Host = this.configData.GnuCashDbConn.Host.trim()
-    this.configData.GnuCashDbConn.Database = this.configData.GnuCashDbConn.Database.trim()
-    this.configData.GnuCashDbConn.User = this.configData.GnuCashDbConn.User.trim()
-    this.configData.GnuCashDbConn.Password = this.configData.GnuCashDbConn.Password.trim()
-    this.configData.AlphaVantageApiKey = this.configData.AlphaVantageApiKey.trim()
+  private saveConfigClick() {
+    this.saveConfig().then(() => {
+      this.$modal.hide(this.modelName)
+    })
+  }
 
-    this.$emit('saveConfig', this.configData)
-    this.$modal.hide(this.modelName)
-    this.saved = true
+  private saveConfig() {
+    return new Promise<void>(resolve => {
+      ElectronApi.send('save-config', this.configData)
+      ElectronApi.on('save-config-reply', (event, configData) => {
+        ElectronApi.removeAllListeners('save-config-reply')
+        this.$emit('configSaved', configData)
+        this.saved = true
+
+        resolve()
+      })
+    })
+  }
+
+  private syncConfigClick() {
+    this.saveConfig().then(() => {
+      this.getCurrencies()
+    })
+  }
+
+  private getCurrencies() {
+    return new Promise<GnuCashCurrency[]>(resolve => {
+      ElectronApi.send('get-currencies')
+      ElectronApi.on('get-currencies-reply', (event, result) => {
+        ElectronApi.removeAllListeners('get-currencies-reply')
+
+        resolve(result)
+      })
+    }).then(currencies => {
+      this.currencies = currencies
+    })
   }
 }
 </script>
@@ -122,6 +170,10 @@ export default class ConfigModal extends Vue {
       display: inline-block;
     }
 
+    select {
+      width: 120px;
+    }
+
     input {
       width: 120px;
       border: 0;
@@ -143,6 +195,14 @@ export default class ConfigModal extends Vue {
     float: right;
     height: 22px;
     width: 22px;
+    padding-left: 7px;
+  }
+
+  .sync {
+    height: 15px;
+    width: 15px;
+    color: $blue-refresh;
+    padding-top: 3px;
   }
 }
 </style>

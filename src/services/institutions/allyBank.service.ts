@@ -3,10 +3,13 @@ import { BankInstitution } from '../../models/BankInstitution'
 import { GnuCashTransaction } from '../../models/GnuCashTransaction'
 import { AllyBankRecord } from '../../models/institutions/AllyBankRecord'
 import { environment } from '../../environments/environment'
-import { injectable } from 'inversify'
+import { injectable, inject } from 'inversify'
+import { ConfigurationService } from '../configuration.service'
 
 @injectable()
 export class AllyBankService implements BankInstitution {
+  constructor(@inject(ConfigurationService) private configurationService: ConfigurationService) { }
+
   ParseCSV (fileContent: string): GnuCashTransaction[] {
     const records = this.parseCSV(fileContent)
     const transactions = this.mapAllBankRecordsToGnuCashTransactions(records)
@@ -31,6 +34,7 @@ export class AllyBankService implements BankInstitution {
       transactions.push({
         AccountGuid: environment.gnuCashAccountGuid.ally,
         Description: r.Description,
+        CurrencyGuid: this.configurationService.ConfigData.GnuCashDefaults.CurrencyGUID,
         Amount: parseFloat(r.Amount),
         PostDate: new Date(`${r.Date} ${r.Time}Z`),
         CreateDate: new Date()

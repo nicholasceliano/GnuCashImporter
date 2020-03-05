@@ -1,8 +1,8 @@
-import { GnuCashTransaction } from './GnuCashTransaction';
+import { GnuCashTransaction } from './GnuCashTransaction'
 
 export interface GnuCashImportFile {
   FilePath: string;
   FileName: string;
-  ImportType?: string
-  Transactions: GnuCashTransaction[]
+  ImportType?: string;
+  Transactions: GnuCashTransaction[];
 }

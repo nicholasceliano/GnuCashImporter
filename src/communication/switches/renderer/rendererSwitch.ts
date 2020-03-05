@@ -1,6 +1,5 @@
-import { IpcRendererEvent } from 'electron';
-
 export interface RendererSwitch {
-  send(channel: string, ...args: any[]): void
-  on(channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void): void | Electron.IpcRenderer
+  send(channel: string, ...args: any[]): void;
+  on(channel: string, listener: (event: any, ...args: any[]) => void): void | Electron.IpcRenderer;
+  removeAllListeners(channel: string): void | Electron.IpcRenderer;
 }

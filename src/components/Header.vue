@@ -21,7 +21,7 @@
           <span>{{databaseName}}</span>
         </div>
       </div>
-      <ConfigModal :configData="configData" v-on:saveConfig="saveConfigHandler"></ConfigModal>
+      <ConfigModal :configData="configData" v-on:configSaved="configSavedHandler"></ConfigModal>
     </div>
   </div>
 </template>
@@ -56,6 +56,7 @@ export default class Header extends Vue {
 
   async beforeMount() {
     await this.getConfig()
+
     this.isElectron = isElectron
   }
 
@@ -71,9 +72,8 @@ export default class Header extends Vue {
     ElectronWindow.maximizeResize()
   }
 
-  saveConfigHandler(configData: ConfigurationData) {
+  configSavedHandler(configData: ConfigurationData) {
     this.configData = configData
-    this.saveConfig()
     this.setDatabaseName()
   }
 
@@ -84,15 +84,15 @@ export default class Header extends Vue {
   private getConfig() {
     return new Promise<ConfigurationData>(resolve => {
       ElectronApi.send('get-config')
-      ElectronApi.on('get-config-reply', (event, result) => resolve(result))
+      ElectronApi.on('get-config-reply', (event, result) => {
+        ElectronApi.removeAllListeners('get-config-reply')
+
+        resolve(result)
+      })
     }).then(configData => {
       this.configData = configData
       this.setDatabaseName()
     })
-  }
-
-  private saveConfig() {
-    ElectronApi.send('save-config', this.configData)
   }
 
   private setDatabaseName() {
