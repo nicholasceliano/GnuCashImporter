@@ -1,21 +1,25 @@
+- selected reconcile account border/text styles
 - **check if transaction has already been imported before inserting new record
 - encrypt database info in config file
 
 UI
 - add sidebar collapse to link image icons
 
+
 File Import
 - add option to select files
-  - add option to select institution for file selection
   - add option to select account for file selection
-    - maybe add both of these to the config section?...maybe in future
-- add option to select reconcile accounts after data parse, but before insert call
-- log insert results back to user
+    - return valid import account list for user to select from
+    - need to make user select import account (from header) when importing a file
+      - maybe add both of these to the config section?...maybe in future
+- log insert results back to user to see what was imported(green), already imported(yellow), failed import(red, with text)
+- figure out what to do with UI after file import finished
 
 Quote Puller
 - port code over from python
 - allow to be manually run with button
 - display output results
+  - need ICP event to send back
 
 Database backup
 - port code from python

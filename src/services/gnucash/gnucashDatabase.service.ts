@@ -1,12 +1,14 @@
 import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import { GnuCashImportMetaData } from '../../models/gnuCash/GnuCashImportMetaData'
-import * as mysql from 'mysql'
+import mysql from 'mysql'
 import { v4 } from 'uuid'
 import { GnuCashAccount } from '../../models/gnuCash/GnuCashAccount'
 import { GnuCashPriceService } from './gnucashPrice.service'
 import { injectable, inject } from 'inversify'
 import { ConfigurationService } from '../configuration.service'
 import { GnuCashCurrency } from '@/models/gnuCash/GnuCashCurrency'
+import { GnuCashStockValue } from '@/models/gnuCash/GnuCashStockValue'
+import { GnuCashPrice } from '@/models/gnuCash/GnuCashPrice'
 
 @injectable()
 export class GnuCashDatabaseService {
@@ -49,6 +51,19 @@ export class GnuCashDatabaseService {
     }
   }
 
+  InsertPriceRecord(price: GnuCashPrice): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.mySql.query(`CALL insertPrice(${v4().removeDashes()}, ${price.commodity_guid}, ${price.currency_guid},
+        ${price.date.toMySqlDateTimeString()}, ${price.source}, ${price.type}, ${price.value_num}, ${price.value_denom})`, (err, results) => {
+        if (err) return reject(err)
+
+        if (results) {
+          resolve(`${price.commodity_guid}: ${price.value_denom} ${price.date} - Sucessfully Inserted`)
+        }
+      })
+    })
+  }
+
   GetCurrencies(): Promise<GnuCashCurrency[]> {
     return new Promise((resolve, reject) => {
       const currencies: GnuCashCurrency[] = []
@@ -83,6 +98,22 @@ export class GnuCashDatabaseService {
         })
 
         resolve(accounts)
+      })
+    })
+  }
+
+  GetAllStockValues(): Promise<GnuCashStockValue[]> {
+    return new Promise((resolve, reject) => {
+      const stockValues: GnuCashStockValue[] = []
+
+      this.mySql.query('CALL getAllStockValues()', (err, results) => {
+        if (err) return reject(err)
+
+        results.forEach((r: GnuCashStockValue) => {
+          stockValues.push(r)
+        })
+
+        resolve(stockValues)
       })
     })
   }

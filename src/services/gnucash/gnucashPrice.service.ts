@@ -5,7 +5,7 @@ import { injectable } from 'inversify'
 @injectable()
 export class GnuCashPriceService {
   SetTransactionValueFractions (transaction: GnuCashTransaction, rootSplit = true): GnuCashTransaction {
-    const valueFraction = this.calcValueFraction(rootSplit ? transaction.Amount : -transaction.Amount)
+    const valueFraction = this.CalcValueFraction(rootSplit ? transaction.Amount : -transaction.Amount)
 
     transaction.ValueNum = valueFraction.Numerator
     transaction.ValueDenom = valueFraction.Denominator
@@ -15,7 +15,7 @@ export class GnuCashPriceService {
     return transaction
   }
 
-  private calcValueFraction (price: number): Fraction {
+  CalcValueFraction (price: number): Fraction {
     const priceStr = price.toFixed(2).toString()
     const num = this.calcValueNum(priceStr)
     const denom = this.calcValueDenom(priceStr)

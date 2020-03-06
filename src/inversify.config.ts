@@ -7,6 +7,8 @@ import { FilePullerService } from './services/file/filePuller.service'
 import { GnuCashDatabaseService } from './services/gnucash/gnucashDatabase.service'
 import { ConfigurationService } from './services/configuration.service'
 import { TransactionParserService } from './services/file/transactionParser.service'
+import { AlphaVantageService } from './services/quote/alphaVantage.service'
+import { QuotePullerService } from './services/quote/quotePuller.service'
 
 const container = new Container()
 
@@ -18,5 +20,8 @@ container.bind<AllyBankService>(AllyBankService).toSelf()
 container.bind<TDAmeritradeService>(TDAmeritradeService).toSelf()
 container.bind<ConfigurationService>(ConfigurationService).toSelf().inSingletonScope()
 container.bind<TransactionParserService>(TransactionParserService).toSelf()
+
+container.bind<QuotePullerService>(QuotePullerService).toSelf()
+container.bind<AlphaVantageService>(AlphaVantageService).toSelf()
 
 export { container }
