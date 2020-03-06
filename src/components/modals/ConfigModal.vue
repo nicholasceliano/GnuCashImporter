@@ -62,7 +62,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { ConfigurationData } from '@/models/ConfigurationData'
-import { GnuCashCurrency } from '../../models/GnuCashCurrency'
+import { GnuCashCurrency } from '@/models/gnuCash/GnuCashCurrency'
 import { ElectronApi } from '@/communication/electronSwitch'
 
 @Component

@@ -9,10 +9,10 @@ describe('TDAmeritradeService', () => {
   })
 
   it('ImportCSV throws Not Implemented', () => {
-    assert.throws(() => service.ImportCSV(''), 'Not Implemented')
+    assert.throws(() => service.ParseCSV(''), 'Not Implemented')
   })
 
   it('ImportPDF throws Not Implemented', () => {
-    assert.throws(() => service.ImportPDF(), 'Not Implemented')
+    assert.throws(() => service.ParsePDF(), 'Not Implemented')
   })
 })

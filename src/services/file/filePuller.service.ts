@@ -2,15 +2,13 @@ import fs from 'fs'
 import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service'
 import { FileUtilityService } from './fileUtility.service'
 import { environment } from '../../environments/environment'
-import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData'
+import { GnuCashImportMetaData } from '@/models/gnuCash/GnuCashImportMetaData'
 import { inject, injectable } from 'inversify'
-import { TransactionParserService } from './transactionParser.service'
-import { GnuCashImportFile } from '@/models/GnuCashImportFile'
+import { GnuCashImportFile } from '@/models/gnuCash/GnuCashImportFile'
 
 @injectable()
 export class FilePullerService {
   constructor(
-    @inject(TransactionParserService) private transactionParserService: TransactionParserService,
     @inject(FileUtilityService) private fileUtility: FileUtilityService,
     @inject(GnuCashDatabaseService) private gnuCash: GnuCashDatabaseService) { }
 

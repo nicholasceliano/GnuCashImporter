@@ -1,6 +1,6 @@
 import parse from 'csv-parse/lib/sync'
 import { BankInstitution } from '../../models/BankInstitution'
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import { AllyBankRecord } from '../../models/institutions/AllyBankRecord'
 import { environment } from '../../environments/environment'
 import { injectable, inject } from 'inversify'

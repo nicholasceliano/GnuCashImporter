@@ -1,5 +1,5 @@
 import { BankInstitution } from '../../models/BankInstitution'
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import { injectable } from 'inversify'
 
 @injectable()

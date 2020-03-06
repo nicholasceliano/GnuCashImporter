@@ -1,5 +1,5 @@
 import { DatabaseConnection } from './DatabaseConnection'
-import { GnuCashUserDefaults } from './GnuCashUserDefaults'
+import { GnuCashUserDefaults } from './gnuCash/GnuCashUserDefaults'
 
 export type ConfigurationData = {
   GnuCashDbConn: DatabaseConnection;

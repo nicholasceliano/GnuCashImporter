@@ -1,4 +1,4 @@
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import { Fraction } from '../../models/Fraction'
 import { injectable } from 'inversify'
 

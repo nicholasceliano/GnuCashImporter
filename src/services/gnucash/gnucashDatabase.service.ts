@@ -1,13 +1,12 @@
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
-import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
+import { GnuCashImportMetaData } from '../../models/gnuCash/GnuCashImportMetaData'
 import * as mysql from 'mysql'
 import { v4 } from 'uuid'
-import { environment } from '../../environments/environment'
-import { GnuCashAccount } from '../../models/GnuCashAccount'
+import { GnuCashAccount } from '../../models/gnuCash/GnuCashAccount'
 import { GnuCashPriceService } from './gnucashPrice.service'
 import { injectable, inject } from 'inversify'
 import { ConfigurationService } from '../configuration.service'
-import { GnuCashCurrency } from '@/models/GnuCashCurrency'
+import { GnuCashCurrency } from '@/models/gnuCash/GnuCashCurrency'
 
 @injectable()
 export class GnuCashDatabaseService {
@@ -123,7 +122,7 @@ export class GnuCashDatabaseService {
     this.mySql.query(`INSERT INTO splits VALUES (
       '${v4().removeDashes()}',
       '${transaction.TransactionGuid}',
-      '${ rootSplit ? transaction.AccountGuid : transaction.ReconcileAccountGuid}',
+      '${rootSplit ? transaction.AccountGuid : transaction.ReconcileAccountGuid}',
       '',
       '',
       'n',

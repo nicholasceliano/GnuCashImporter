@@ -2,7 +2,7 @@ import { container } from '../../inversify.config'
 import { FilePullerService } from '../../services/file/filePuller.service'
 import { ipcMain } from 'electron'
 import { TransactionParserService } from '@/services/file/transactionParser.service'
-import { GnuCashImportFile } from '@/models/GnuCashImportFile'
+import { GnuCashImportFile } from '@/models/gnuCash/GnuCashImportFile'
 
 ipcMain.on('import-files', (event, file: GnuCashImportFile) => {
   console.log('Starting File Import...')

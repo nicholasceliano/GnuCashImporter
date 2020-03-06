@@ -66,8 +66,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { ElectronApi } from '@/communication/electronSwitch'
 import FileUpload from '@/components/FileUpload.vue'
-import { GnuCashImportFile } from '../../models/GnuCashImportFile'
-import { GnuCashAccount } from '../../models/GnuCashAccount'
+import { GnuCashImportFile } from '@/models/gnuCash/GnuCashImportFile'
+import { GnuCashAccount } from '@/models/gnuCash/GnuCashAccount'
 
 @Component({
   components: {

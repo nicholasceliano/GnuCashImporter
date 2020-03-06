@@ -1,7 +1,7 @@
 import { GnuCashPriceService } from './gnucashPrice.service'
 import '../../prototypes/number.prototype'
 import { expect } from 'chai'
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 
 describe('GnuCashPriceService', () => {
   let service: GnuCashPriceService
@@ -52,7 +52,7 @@ describe('GnuCashPriceService', () => {
   it('Transaction amount is opposite when rootSplit is false', () => {
     const resp = service.SetTransactionValueFractions(bankTransaction, false)
 
-    expect(resp.ValueNum).to.eq(61726)
-    expect(resp.ValueDenom).to.eq(-5)
+    expect(resp.ValueNum).to.eq(-61726)
+    expect(resp.ValueDenom).to.eq(5)
   })
 })

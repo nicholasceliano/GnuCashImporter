@@ -16,4 +16,18 @@ describe('NumberPrototype', () => {
     expect(resp[0]).to.eq(3967)
     expect(resp[1]).to.eq(145)
   })
+
+  it('Positive ToDollars is formatted correctly', () => {
+    const number = 12345.1202
+    const resp = number.toDollars()
+
+    expect(resp).eq('$12345.12')
+  })
+
+  it('Negative ToDollars is formatted correctly', () => {
+    const number = -12345.1202
+    const resp = number.toDollars()
+
+    expect(resp).eq('$-12345.12')
+  })
 })

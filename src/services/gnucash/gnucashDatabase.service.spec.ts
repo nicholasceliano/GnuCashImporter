@@ -1,11 +1,11 @@
 import { GnuCashDatabaseService } from './gnucashDatabase.service'
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
-import { container } from '../../inversify.config'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import '../../prototypes/string.prototype'
 import '../../prototypes/date.prototype'
 import '../../prototypes/number.prototype'
 import { expect } from 'chai'
-import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData'
+import { GnuCashImportMetaData } from '../../models/gnuCash/GnuCashImportMetaData'
+import { container } from '../../inversify.config'
 
 describe('GnuCashDatabaseService', () => {
   let service: GnuCashDatabaseService

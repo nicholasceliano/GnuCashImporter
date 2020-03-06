@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { GnuCashTransaction } from '../../models/GnuCashTransaction'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import { BankInstitution } from '../../models/BankInstitution'
 import { inject, injectable } from 'inversify'
 import { AllyBankService } from '../institutions/allyBank.service'
