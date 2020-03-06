@@ -18,7 +18,7 @@ export class ConfigurationService {
 
   public ConfigData: ConfigurationData = {
     GnuCashDbConn: { Host: '', Database: '', User: '', Password: '' },
-    GnuCashDefaults: { CurrencyGUID: '' },
+    GnuCashDefaults: { CurrencyGUID: '', ReconcileAccountGUID: '' },
     AlphaVantageApiKey: ''
   };
 

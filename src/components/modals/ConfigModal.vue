@@ -29,8 +29,12 @@
           <div class="section-title">GnuCash Defaults</div>
           <div class="input-item">
             <div class="label">Currency:</div>
-            <select v-model="configData.GnuCashDefaults.CurrencyGUID">
-              <option v-for="c in currencies" :value="c.guid" :key="c.guid">{{c.fullname}}</option>
+            <select v-model="configData.GnuCashDefaults">
+              <option
+                v-for="c in currencies"
+                v-bind:value="{ CurrencyGUID: c.guid, ReconcileAccountGUID: c.reconcileAccountGuid }"
+                :key="c.guid"
+              >{{c.fullname}}</option>
             </select>
           </div>
         </div>

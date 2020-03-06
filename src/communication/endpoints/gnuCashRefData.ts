@@ -9,3 +9,11 @@ ipcMain.on('get-currencies', (event) => {
     console.log(err)
   })
 })
+
+ipcMain.on('get-reconcile-accounts', (event) => {
+  container.get(GnuCashDatabaseService).GetReconcileAccounts().then(accounts => {
+    event.reply('get-reconcile-accounts-reply', accounts)
+  }, (err) => {
+    console.log(err)
+  })
+})

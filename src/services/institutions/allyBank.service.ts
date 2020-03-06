@@ -35,6 +35,7 @@ export class AllyBankService implements BankInstitution {
         AccountGuid: environment.gnuCashAccountGuid.ally,
         Description: r.Description,
         CurrencyGuid: this.configurationService.ConfigData.GnuCashDefaults.CurrencyGUID,
+        ReconcileAccountGuid: this.configurationService.ConfigData.GnuCashDefaults.ReconcileAccountGUID,
         Amount: parseFloat(r.Amount),
         PostDate: new Date(`${r.Date} ${r.Time}Z`),
         CreateDate: new Date()

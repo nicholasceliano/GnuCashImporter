@@ -4,9 +4,9 @@ import { ipcMain } from 'electron'
 import { TransactionParserService } from '@/services/file/transactionParser.service'
 import { GnuCashImportFile } from '@/models/GnuCashImportFile'
 
-ipcMain.on('import-files', (event, args: GnuCashImportFile) => {
+ipcMain.on('import-files', (event, file: GnuCashImportFile) => {
   console.log('Starting File Import...')
-  container.get(FilePullerService).ImportFiles(args.FilePath, args.FileName, args.ImportType).then(resp => {
+  container.get(FilePullerService).ImportFiles(file).then(resp => {
     event.reply('import-files-reply', resp)
   })
 })

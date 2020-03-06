@@ -3,4 +3,5 @@ export interface GnuCashCurrency {
   namespace: string;
   mnemonic: string;
   fullname: string;
+  reconcileAccountGuid: string;
 }

@@ -54,8 +54,9 @@ export class GnuCashDatabaseService {
     return new Promise((resolve, reject) => {
       const currencies: GnuCashCurrency[] = []
 
-      this.mySql.query(`SELECT guid, namespace, mnemonic, fullname
-        FROM commodities
+      this.mySql.query(`SELECT c.guid, namespace, mnemonic, fullname, a.guid as reconcileAccountGuid
+        FROM commodities c
+          JOIN accounts a ON c.guid = a.commodity_guid AND a.name LIKE 'Imbalance-%'
         WHERE namespace = "CURRENCY"`, (err, results) => {
         if (err) return reject(err)
 
@@ -64,6 +65,25 @@ export class GnuCashDatabaseService {
         })
 
         resolve(currencies)
+      })
+    })
+  }
+
+  GetReconcileAccounts(): Promise<GnuCashAccount[]> {
+    return new Promise((resolve, reject) => {
+      const accounts: GnuCashAccount[] = []
+
+      this.mySql.query(`SELECT
+          guid, name, account_type, commodity_guid, parent_guid, hidden
+        FROM accounts
+        WHERE (account_type IN("EXPENSE", "INCOME") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0`, (err, results) => {
+        if (err) return reject(err)
+
+        results.forEach((r: GnuCashAccount) => {
+          accounts.push(r)
+        })
+
+        resolve(accounts)
       })
     })
   }
@@ -99,15 +119,15 @@ export class GnuCashDatabaseService {
     })
   }
 
-  private insertTransactionSplit(transaction: GnuCashTransaction): void {
+  private insertTransactionSplit(transaction: GnuCashTransaction, rootSplit = true): void {
     this.mySql.query(`INSERT INTO splits VALUES (
       '${v4().removeDashes()}',
       '${transaction.TransactionGuid}',
-      '${transaction.AccountGuid}',
+      '${ rootSplit ? transaction.AccountGuid : transaction.ReconcileAccountGuid}',
       '',
       '',
       'n',
-      '${transaction.CreateDate.toMySqlDateTimeString()}',
+      '${new Date(0).toMySqlDateTimeString()}',
       '${transaction.ValueNum}',
       '${transaction.ValueDenom}',
       '${transaction.QuantityNum}',
@@ -118,13 +138,8 @@ export class GnuCashDatabaseService {
   }
 
   private insertImbalanceTransactionSplit(transaction: GnuCashTransaction): void {
-    this.getAccountByGuid(environment.gnuCashAccountGuid.imbalance).then(x => {
-      transaction.TransactionGuid = v4().removeDashes()
-      transaction.AccountGuid = environment.gnuCashAccountGuid.imbalance
-      transaction.CurrencyGuid = x.commodity_guid
-      transaction = this.gnuCashPrice.SetTransactionValueFractions(transaction)
+    transaction = this.gnuCashPrice.SetTransactionValueFractions(transaction, false)
 
-      this.insertTransactionSplit(transaction)
-    })
+    this.insertTransactionSplit(transaction, false)
   }
 }

@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment'
 import { GnuCashImportMetaData } from '../../models/GnuCashImportMetaData'
 import { inject, injectable } from 'inversify'
 import { TransactionParserService } from './transactionParser.service'
+import { GnuCashImportFile } from '@/models/GnuCashImportFile'
 
 @injectable()
 export class FilePullerService {
@@ -13,21 +14,19 @@ export class FilePullerService {
     @inject(FileUtilityService) private fileUtility: FileUtilityService,
     @inject(GnuCashDatabaseService) private gnuCash: GnuCashDatabaseService) { }
 
-  ImportFiles(filePath: string, fileName: string, importType?: string): Promise<void> {
+  ImportFiles(file: GnuCashImportFile): Promise<void> {
     return new Promise((resolve) => {
-      this.transactionParserService.GetTransactionsFromFile(filePath, fileName, importType).then(transactions => {
-        const importMetaData = this.gnuCash.InsertTransactions(transactions)
+      const importMetaData = this.gnuCash.InsertTransactions(file.Transactions)
 
-        // need to check if file has already been imported
+      // need to check if file has already been imported
 
-        if (importMetaData) {
-          this.archiveFile(filePath, fileName, importMetaData, importType)
-        } else {
-          this.deleteFile(fileName)
-        }
+      if (importMetaData) {
+        this.archiveFile(file.FilePath, file.FileName, importMetaData, file.ImportType)
+      } else {
+        this.deleteFile(file.FileName)
+      }
 
-        resolve()
-      })
+      resolve()
     })
   }
 

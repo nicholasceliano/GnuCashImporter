@@ -22,6 +22,11 @@ export class GnuCashPriceService {
 
     const simplifiedFrac = Number.prototype.reduce(num, denom)
 
+    if (simplifiedFrac[1] < 0) {
+      simplifiedFrac[0] = -simplifiedFrac[0]
+      simplifiedFrac[1] = -simplifiedFrac[1]
+    }
+
     return {
       Numerator: simplifiedFrac[0],
       Denominator: simplifiedFrac[1]

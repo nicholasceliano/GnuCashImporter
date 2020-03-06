@@ -44,8 +44,12 @@
               >{{t.PostDate.toMySqlDateTimeString()}}</td>
               <td>
                 <select v-model="t.ReconcileAccountGuid">
-                  <option value="test">test</option>
-                  <option value="test2">test2</option>
+                  <option
+                    v-for="a in reconcileAccounts"
+                    :value="a.guid"
+                    :key="a.guid"
+                    v-bind:class="getAccClass(a.account_type)"
+                  >{{ a.name }}</option>
                 </select>
               </td>
             </tr>
@@ -63,6 +67,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { ElectronApi } from '@/communication/electronSwitch'
 import FileUpload from '@/components/FileUpload.vue'
 import { GnuCashImportFile } from '../../models/GnuCashImportFile'
+import { GnuCashAccount } from '../../models/GnuCashAccount'
 
 @Component({
   components: {
@@ -72,6 +77,11 @@ import { GnuCashImportFile } from '../../models/GnuCashImportFile'
 export default class FileImporter extends Vue {
   private uploadedFiles: GnuCashImportFile[] = []
   private fileUploadComponent!: FileUpload
+  private reconcileAccounts!: GnuCashAccount[]
+
+  async beforeMount() {
+    await this.getReconcileAccounts()
+  }
 
   mounted() {
     this.fileUploadComponent = this.$refs.fileUpload as FileUpload
@@ -134,6 +144,32 @@ export default class FileImporter extends Vue {
   private fileAlreadyUploaded(f: File) {
     return this.uploadedFiles.filter(x => x.FilePath === f.path).length > 0
   }
+
+  private getReconcileAccounts() {
+    return new Promise<GnuCashAccount[]>(resolve => {
+      ElectronApi.send('get-reconcile-accounts')
+      ElectronApi.on('get-reconcile-accounts-reply', (event, result) => {
+        ElectronApi.removeAllListeners('get-reconcile-accounts-reply')
+
+        resolve(result)
+      })
+    }).then(reconcileAccounts => {
+      this.reconcileAccounts = reconcileAccounts.sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      )
+    })
+  }
+
+  private getAccClass(accountType: string) {
+    switch (accountType) {
+      case 'EXPENSE':
+        return 'negAcc'
+      case 'INCOME':
+        return 'posAcc'
+      default:
+        return ''
+    }
+  }
 }
 </script>
 
@@ -191,6 +227,13 @@ export default class FileImporter extends Vue {
   }
   select {
     width: 100%;
+
+    .posAcc {
+      color: $max-green;
+    }
+    .negAcc {
+      color: $close-red;
+    }
   }
   .tblDescription {
     width: 45%;
