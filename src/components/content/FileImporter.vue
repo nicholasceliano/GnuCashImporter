@@ -18,6 +18,8 @@
             <option value="undefined">Select Import Type...</option>
             <option value="ALLY">Ally</option>
             <option value="TDAM">Td Ameritrade</option>
+            <option value="USAA">USAA</option>
+            <option value="WF">Wells Fargo</option>
           </select>
         </div>
         <div v-bind:title="f.FileName" class="descName">{{f.FileName}}</div>
