@@ -1,8 +1,9 @@
 import { container } from '../../inversify.config'
 import { FilePullerService } from '../../services/file/filePuller.service'
 import { ipcMain } from 'electron'
-import { TransactionParserService } from '@/services/file/transactionParser.service'
-import { GnuCashImportFile } from '@/models/gnuCash/GnuCashImportFile'
+import { TransactionParserService } from '../../services/file/transactionParser.service'
+import { GnuCashImportFile } from '../../models/gnuCash/GnuCashImportFile'
+import { SelectOption } from '../../models/utility/SelectOption'
 
 ipcMain.on('import-files', (event, file: GnuCashImportFile) => {
   console.log('Starting File Import...')
@@ -17,4 +18,9 @@ ipcMain.on('parse-files', (event, importFile: GnuCashImportFile) => {
     importFile.Transactions = transactions
     event.reply('parse-files-reply', importFile)
   })
+})
+
+ipcMain.on('get-file-import-options', (event) => {
+  const importOptions = container.get(TransactionParserService).GetImportsInsitutions().map(x => ({ Id: x.Id, Name: x.Name } as SelectOption))
+  event.reply('get-file-import-options-reply', importOptions)
 })

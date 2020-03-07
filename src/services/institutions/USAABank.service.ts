@@ -1,47 +1,28 @@
-import parse from 'csv-parse/lib/sync'
 import { BankInstitution } from '../../models/BankInstitution'
 import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import { USAABankRecord } from '../../models/institutions/USAABankRecord'
 import { environment } from '../../environments/environment'
 import { injectable, inject } from 'inversify'
 import { ConfigurationService } from '../configuration.service'
+import { FileParserService } from '../file/fileParser.service'
 
 @injectable()
-export class USAABankService implements BankInstitution {
-  constructor(@inject(ConfigurationService) private configurationService: ConfigurationService) { }
+export class USAABankService extends FileParserService implements BankInstitution {
+  constructor(@inject(ConfigurationService) protected configurationService: ConfigurationService) {
+    super(configurationService)
+  }
 
   ParseCSV (fileContent: string): GnuCashTransaction[] {
-    const records = this.parseCSV(fileContent)
-    const transactions = this.mapAllBankRecordsToGnuCashTransactions(records)
+    const records = this.ParseCSVToBankRecord<USAABankRecord>(fileContent)
+    const transactions = this.MapBankRecordsToGnuCashTransactions<USAABankRecord>(records, environment.gnuCashAccountGuid.ally,
+      (r: USAABankRecord) => r.Description,
+      (r: USAABankRecord) => r.Amount,
+      (r: USAABankRecord) => `${r.Date} ${r.Time}Z`)
 
     return transactions
   }
 
   ParsePDF (): GnuCashTransaction[] {
     throw Error('Not Implemented')
-  }
-
-  private parseCSV (fileContent: string): USAABankRecord[] {
-    return parse(fileContent, {
-      columns: header => header.map((column: string) => column.trim())
-    })
-  }
-
-  private mapAllBankRecordsToGnuCashTransactions (allBankRecords: USAABankRecord[]): GnuCashTransaction[] {
-    const transactions: GnuCashTransaction[] = []
-
-    allBankRecords.forEach(r => {
-      transactions.push({
-        AccountGuid: environment.gnuCashAccountGuid.ally,
-        Description: r.Description,
-        CurrencyGuid: this.configurationService.ConfigData.GnuCashDefaults.CurrencyGUID,
-        ReconcileAccountGuid: this.configurationService.ConfigData.GnuCashDefaults.ReconcileAccountGUID,
-        Amount: parseFloat(r.Amount),
-        PostDate: new Date(`${r.Date} ${r.Time}Z`),
-        CreateDate: new Date()
-      } as GnuCashTransaction)
-    })
-
-    return transactions
   }
 }

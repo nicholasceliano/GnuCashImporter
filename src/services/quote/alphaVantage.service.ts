@@ -8,8 +8,8 @@ import { GnuCashStockValue } from '@/models/gnuCash/GnuCashStockValue'
 import { GnuCashPriceService } from '../gnucash/gnucashPrice.service'
 import { GnuCashPrice } from '@/models/gnuCash/GnuCashPrice'
 import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service'
-import { win } from '@/background'
-import { AV_JSONProperties } from '@/models/AV_JSONProperties'
+import { win } from '../../background'
+import { AlphaVantageJSONProperties } from '@/models/AlphaVantageJSONProperties'
 import { GlobalConstants } from '@/globalConstants'
 import { AVQuoteImportResponse } from '@/models/AVQuoteImportResponse'
 
@@ -48,7 +48,7 @@ export class AlphaVantageService {
     }
   }
 
-  private quoteRequest(url: string, jsonProps: AV_JSONProperties): Promise<SecurityRecord> {
+  private quoteRequest(url: string, jsonProps: AlphaVantageJSONProperties): Promise<SecurityRecord> {
     return new Promise((resolve, reject) => {
       https.get(url, (res) => {
         res.on('data', (data) => {

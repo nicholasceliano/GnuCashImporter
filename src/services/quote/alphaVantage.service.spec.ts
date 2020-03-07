@@ -10,7 +10,7 @@ describe('AlphaVantageService', () => {
   })
 
   xit('AlphaVantageService works', () => {
-    const resp = service.GetCommodityQuotes([])
+    const resp = service.GetQuotes([])
 
     expect(resp).to.eq({})
   })

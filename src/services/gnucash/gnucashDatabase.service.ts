@@ -54,7 +54,7 @@ export class GnuCashDatabaseService {
   InsertPriceRecord(price: GnuCashPrice): Promise<void> {
     return new Promise((resolve, reject) => {
       this.mySql.query(`CALL insertPrice('${v4().removeDashes()}', '${price.commodity_guid}', '${price.currency_guid}',
-        '${price.date.toMySqlDateTimeString()}', '${price.source}', '${price.type}', ${price.value_num}, ${price.value_denom})`, (err, results) => {
+        '${price.date.toMySqlDateTimeString()}', '${price.source}', '${price.type}', ${price.value_num}, ${price.value_denom})`, (err) => {
         if (err) return reject(err)
 
         resolve()

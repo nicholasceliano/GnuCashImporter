@@ -16,10 +16,7 @@
             v-bind:disabled="f.Transactions.length > 0"
           >
             <option value="undefined">Select Import Type...</option>
-            <option value="ALLY">Ally</option>
-            <option value="TDAM">Td Ameritrade</option>
-            <option value="USAA">USAA</option>
-            <option value="WF">Wells Fargo</option>
+            <option v-for="o in fileImportOptions" v-bind:key="o.Id" :value=o.Id>{{o.Name}}</option>
           </select>
         </div>
         <div v-bind:title="f.FileName" class="descName">{{f.FileName}}</div>
@@ -70,6 +67,7 @@ import { ElectronApi } from '@/communication/electronSwitch'
 import FileUpload from '@/components/FileUpload.vue'
 import { GnuCashImportFile } from '@/models/gnuCash/GnuCashImportFile'
 import { GnuCashAccount } from '@/models/gnuCash/GnuCashAccount'
+import { SelectOption } from '../../models/utility/SelectOption'
 
 @Component({
   components: {
@@ -80,9 +78,11 @@ export default class FileImporter extends Vue {
   private uploadedFiles: GnuCashImportFile[] = []
   private fileUploadComponent!: FileUpload
   private reconcileAccounts!: GnuCashAccount[]
+  private fileImportOptions: SelectOption[] = []
 
   async beforeMount() {
     await this.getReconcileAccounts()
+    await this.getFileImportOptions()
   }
 
   mounted() {
@@ -158,6 +158,21 @@ export default class FileImporter extends Vue {
     }).then(reconcileAccounts => {
       this.reconcileAccounts = reconcileAccounts.sort((a, b) =>
         a.name > b.name ? 1 : -1
+      )
+    })
+  }
+
+  private getFileImportOptions() {
+    return new Promise<SelectOption[]>(resolve => {
+      ElectronApi.send('get-file-import-options')
+      ElectronApi.on('get-file-import-options-reply', (event, result) => {
+        ElectronApi.removeAllListeners('get-file-import-options-reply')
+
+        resolve(result)
+      })
+    }).then(fileImportOptions => {
+      this.fileImportOptions = fileImportOptions.sort((a, b) =>
+        a.Name > b.Name ? 1 : -1
       )
     })
   }

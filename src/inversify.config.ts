@@ -12,6 +12,7 @@ import { QuotePullerService } from './services/quote/quotePuller.service'
 import { UtilityService } from './services/utility.service'
 import { USAABankService } from './services/institutions/USAABank.service'
 import { WellsFargoBankService } from './services/institutions/wellsFargoBank.service'
+import { FileParserService } from './services/file/fileParser.service'
 
 const container = new Container()
 
@@ -19,6 +20,7 @@ container.bind<GnuCashPriceService>(GnuCashPriceService).toSelf()
 container.bind<GnuCashDatabaseService>(GnuCashDatabaseService).toSelf()
 container.bind<FileUtilityService>(FileUtilityService).toSelf()
 container.bind<FilePullerService>(FilePullerService).toSelf()
+container.bind<FileParserService>(FileParserService).toSelf()
 container.bind<USAABankService>(USAABankService).toSelf()
 container.bind<AllyBankService>(AllyBankService).toSelf()
 container.bind<WellsFargoBankService>(WellsFargoBankService).toSelf()
