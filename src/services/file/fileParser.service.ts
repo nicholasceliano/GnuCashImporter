@@ -13,7 +13,7 @@ export abstract class FileParserService {
     })
   }
 
-  MapBankRecordsToGnuCashTransactions<T>(bankRecords: T[], accountGuid: string, description: Function, amount: Function, postDate: Function): GnuCashTransaction[] {
+  MapBankRecordsToGnuCashTransactions<T>(bankRecords: T[], accountGuid: string, description: (r: T) => string, amount: (r :T) => string, postDate: (r: T) => string): GnuCashTransaction[] {
     const transactions: GnuCashTransaction[] = []
 
     bankRecords.forEach(r => {

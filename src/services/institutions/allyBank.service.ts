@@ -16,9 +16,9 @@ export class AllyBankService extends FileParserService implements BankInstitutio
   ParseCSV (fileContent: string): GnuCashTransaction[] {
     const records = this.ParseCSVToBankRecord<AllyBankRecord>(fileContent)
     const transactions = this.MapBankRecordsToGnuCashTransactions<AllyBankRecord>(records, environment.gnuCashAccountGuid.ally,
-      (r: AllyBankRecord) => r.Description,
-      (r: AllyBankRecord) => r.Amount,
-      (r: AllyBankRecord) => `${r.Date} ${r.Time}Z`)
+      (r) => r.Description,
+      (r) => r.Amount,
+      (r) => `${r.Date} ${r.Time}Z`)
 
     return transactions
   }

@@ -15,9 +15,9 @@ export class WellsFargoBankService extends FileParserService implements BankInst
   ParseCSV (fileContent: string): GnuCashTransaction[] {
     const records = this.ParseCSVToBankRecord<WellsFargoBankRecord>(fileContent)
     const transactions = this.MapBankRecordsToGnuCashTransactions<WellsFargoBankRecord>(records, environment.gnuCashAccountGuid.ally,
-      (r: WellsFargoBankRecord) => r.Description,
-      (r: WellsFargoBankRecord) => r.Amount,
-      (r: WellsFargoBankRecord) => `${r.Date} ${r.Time}Z`)
+      (r) => r.Description,
+      (r) => r.Amount,
+      (r) => `${r.Date} ${r.Time}Z`)
 
     return transactions
   }
