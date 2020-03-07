@@ -7,9 +7,10 @@ import { injectable, inject } from 'inversify'
 export abstract class FileParserService {
   constructor(@inject(ConfigurationService) protected configurationService: ConfigurationService) { }
 
-  ParseCSVToBankRecord<T>(fileContent: string): T[] {
+  ParseCSVToBankRecord<T>(fileContent: string, columnStructure?: string[]): T[] {
     return parse(fileContent, {
-      columns: header => header.map((column: string) => column.trim())
+      columns: columnStructure ? columnStructure : header => header.map((column: string) => column.trim()),
+      skip_lines_with_error: true
     })
   }
 

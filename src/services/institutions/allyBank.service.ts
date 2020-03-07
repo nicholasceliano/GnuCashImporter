@@ -1,4 +1,3 @@
-
 import { BankInstitution } from '../../models/BankInstitution'
 import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 import { AllyBankRecord } from '../../models/institutions/AllyBankRecord'

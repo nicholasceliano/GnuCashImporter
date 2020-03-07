@@ -12,11 +12,12 @@ export class USAABankService extends FileParserService implements BankInstitutio
   }
 
   ParseCSV (fileContent: string, accountGuid: string): GnuCashTransaction[] {
-    const records = this.ParseCSVToBankRecord<USAABankRecord>(fileContent)
+    const columnStructure = ['Blank1', 'Blank2', 'Date', 'Blank3','Description','Type','Amount']
+    const records = this.ParseCSVToBankRecord<USAABankRecord>(fileContent, columnStructure)
     const transactions = this.MapBankRecordsToGnuCashTransactions<USAABankRecord>(records, accountGuid,
-      (r) => r.Description,
+      (r) => r.Description.trim(),
       (r) => r.Amount,
-      (r) => `${r.Date} ${r.Time}Z`)
+      (r) => `${r.Date}Z`)
 
     return transactions
   }

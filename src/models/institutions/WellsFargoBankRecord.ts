@@ -1,7 +1,7 @@
 export interface WellsFargoBankRecord {
   Date: string;
-  Time: string;
   Amount: string;
-  Type: string;
+  Blank1: string;
+  Blank2: string;
   Description: string;
 }
