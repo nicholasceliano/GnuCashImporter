@@ -2,7 +2,7 @@ import { injectable } from 'inversify'
 import { app } from 'electron'
 import { existsSync, mkdirSync, writeFile, readFile } from 'fs'
 import { ConfigurationData } from '@/models/ConfigurationData'
-import { environment } from '@/environments/environment'
+import { environment } from '../environments/environment'
 
 @injectable()
 export class ConfigurationService {

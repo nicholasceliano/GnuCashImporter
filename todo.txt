@@ -16,10 +16,8 @@ File Import
 - figure out what to do with UI after file import finished
 
 Quote Puller
-- port code over from python
-- allow to be manually run with button
-- display output results
-  - need ICP event to send back
+- build in config checkbox for free/paid AV acc
+- fix up ui a bit (dates are off)
 
 Database backup
 - port code from python

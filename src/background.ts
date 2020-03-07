@@ -4,6 +4,7 @@ import 'reflect-metadata'
 require('./communication/endpoints/fileImporter')
 require('./communication/endpoints/configuration')
 require('./communication/endpoints/gnuCashRefData')
+require('./communication/endpoints/quotePuller')
 require('./prototypes/date.prototype')
 require('./prototypes/number.prototype')
 require('./prototypes/string.prototype')
@@ -82,3 +83,5 @@ if (isDevelopment) {
     })
   }
 }
+
+export { win }

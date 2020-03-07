@@ -9,6 +9,7 @@ import { ConfigurationService } from './services/configuration.service'
 import { TransactionParserService } from './services/file/transactionParser.service'
 import { AlphaVantageService } from './services/quote/alphaVantage.service'
 import { QuotePullerService } from './services/quote/quotePuller.service'
+import { UtilityService } from './services/utility.service'
 
 const container = new Container()
 
@@ -20,6 +21,7 @@ container.bind<AllyBankService>(AllyBankService).toSelf()
 container.bind<TDAmeritradeService>(TDAmeritradeService).toSelf()
 container.bind<ConfigurationService>(ConfigurationService).toSelf().inSingletonScope()
 container.bind<TransactionParserService>(TransactionParserService).toSelf()
+container.bind<UtilityService>(UtilityService).toSelf()
 
 container.bind<QuotePullerService>(QuotePullerService).toSelf()
 container.bind<AlphaVantageService>(AlphaVantageService).toSelf()

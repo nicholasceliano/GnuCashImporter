@@ -14,7 +14,7 @@ describe('GnuCashDatabaseService', () => {
     service = container.get(GnuCashDatabaseService)
   })
 
-  it('Insert Transactions returns nothing when list is empty', () => {
+  xit('Insert Transactions returns nothing when list is empty', () => {
     const resp = service.InsertTransactions([])
 
     expect(resp).to.be.undefined
