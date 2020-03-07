@@ -7,16 +7,25 @@
       ref="fileUpload"
       @filesChanged="filesChanged"
     ></FileUpload>
+    <div v-if="uploadedFiles.length > 0" class="fileDesc">
+      <div class="descType bold">Import Type</div>
+      <div class="descType bold">Import Account</div>
+      <div class="descName bold">File Name</div>
+      <div class="descClose bold"></div>
+      <div></div>
+    </div>
     <div v-for="f in uploadedFiles" :key="f.FilePath">
       <div class="fileDesc">
         <div title="Import Type" class="descType">
-          <select
-            name="importTypeList"
-            v-model="f.ImportType"
-            v-bind:disabled="f.Transactions.length > 0"
-          >
-            <option value="undefined">Select Import Type...</option>
-            <option v-for="o in fileImportOptions" v-bind:key="o.Id" :value=o.Id>{{o.Name}}</option>
+          <select name="importTypeList" v-model="f.ImportType"  @change="clearTransactions(f)">
+            <option value>Select Import Type...</option>
+            <option v-for="o in fileImportOptions" v-bind:key="o.Id" :value="o.Id">{{o.Name}}</option>
+          </select>
+        </div>
+        <div title="Import Account" class="descType">
+          <select name="importAccountList" v-model="f.ImportAccount" @change="clearTransactions(f)">
+            <option value>Select Import Account...</option>
+            <option v-for="a in importAccounts" v-bind:key="a.guid" :value="a.guid">{{a.name}}</option>
           </select>
         </div>
         <div v-bind:title="f.FileName" class="descName">{{f.FileName}}</div>
@@ -78,11 +87,13 @@ export default class FileImporter extends Vue {
   private uploadedFiles: GnuCashImportFile[] = []
   private fileUploadComponent!: FileUpload
   private reconcileAccounts!: GnuCashAccount[]
+  private importAccounts!: GnuCashAccount[]
   private fileImportOptions: SelectOption[] = []
 
   async beforeMount() {
     await this.getReconcileAccounts()
     await this.getFileImportOptions()
+    await this.getImportAccounts()
   }
 
   mounted() {
@@ -95,6 +106,8 @@ export default class FileImporter extends Vue {
         this.uploadedFiles.push({
           FilePath: f.path,
           FileName: f.name,
+          ImportType: '',
+          ImportAccount: '',
           Transactions: []
         } as GnuCashImportFile)
       }
@@ -106,9 +119,13 @@ export default class FileImporter extends Vue {
     this.fileUploadComponent.removeFile(filePath)
   }
 
+  private clearTransactions(f: GnuCashImportFile) {
+    f.Transactions = []
+  }
+
   private parseFiles() {
     this.uploadedFiles.forEach(f => {
-      if (f.ImportType && f.Transactions.length === 0) {
+      if (f.ImportType && f.ImportAccount && f.Transactions.length === 0) {
         new Promise<GnuCashImportFile>(resolve => {
           ElectronApi.send('parse-files', f)
           ElectronApi.on(
@@ -124,20 +141,21 @@ export default class FileImporter extends Vue {
             f.Transactions = fileResp.Transactions
           }
         })
+      } else {
+        f.Transactions = []
       }
     })
   }
 
   private importFiles() {
-    this.uploadedFiles.forEach(f => {
+    this.uploadedFiles.forEach((f, i) => {
       if (f.Transactions.length > 0) {
         ElectronApi.send('import-files', f)
         ElectronApi.on('import-files-reply', () => {
           ElectronApi.removeAllListeners('import-files-reply')
-
           // TODO: Need to rework this with Import result
-          // const fileUploadComponent = this.$refs.fileUpload as FileUpload
-          // fileUploadComponent.reset()
+          this.uploadedFiles.splice(i, 1)
+          this.fileUploadComponent.reset()
         })
       }
     })
@@ -177,6 +195,21 @@ export default class FileImporter extends Vue {
     })
   }
 
+  private getImportAccounts() {
+    return new Promise<GnuCashAccount[]>(resolve => {
+      ElectronApi.send('get-import-accounts')
+      ElectronApi.on('get-import-accounts-reply', (event, result) => {
+        ElectronApi.removeAllListeners('get-import-accounts-reply')
+
+        resolve(result)
+      })
+    }).then(importAccounts => {
+      this.importAccounts = importAccounts.sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      )
+    })
+  }
+
   private getAccClass(accountType: string) {
     switch (accountType) {
       case 'EXPENSE':
@@ -200,6 +233,7 @@ export default class FileImporter extends Vue {
 .fileDesc {
   width: calc(100% - 10px);
   padding-right: 10px;
+  line-height: 20px;
 
   div {
     white-space: nowrap;
@@ -209,14 +243,14 @@ export default class FileImporter extends Vue {
   }
   .descType {
     width: 20%;
+    padding-right: 4px;
     select {
       width: 100%;
     }
   }
   .descName {
-    width: calc(80% - 19px);
+    width: calc(60% - 23px);
     padding-right: 4px;
-    padding-left: 4px;
   }
   .descClose {
     width: 11px;

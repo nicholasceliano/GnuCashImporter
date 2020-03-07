@@ -72,11 +72,26 @@ export class GnuCashDatabaseService {
         WHERE namespace = "CURRENCY"`, (err, results) => {
         if (err) return reject(err)
 
-        results.forEach((r: GnuCashCurrency) => {
-          currencies.push(r)
-        })
+        currencies.push(...results)
 
         resolve(currencies)
+      })
+    })
+  }
+
+  GetImportAccounts(): Promise<GnuCashAccount[]> {
+    return new Promise((resolve, reject) => {
+      const accounts: GnuCashAccount[] = []
+
+      this.mySql.query(`SELECT
+          guid, name, account_type, commodity_guid, parent_guid, hidden
+        FROM accounts
+        WHERE account_type IN("ASSET", "BANK", "CREDIT") AND name NOT LIKE 'Imbalance-%' AND hidden = 0 AND placeholder = 0`, (err, results) => {
+        if (err) return reject(err)
+
+        accounts.push(...results)
+
+        resolve(accounts)
       })
     })
   }
@@ -91,9 +106,7 @@ export class GnuCashDatabaseService {
         WHERE (account_type IN("EXPENSE", "INCOME") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0`, (err, results) => {
         if (err) return reject(err)
 
-        results.forEach((r: GnuCashAccount) => {
-          accounts.push(r)
-        })
+        accounts.push(...results)
 
         resolve(accounts)
       })
@@ -107,9 +120,7 @@ export class GnuCashDatabaseService {
       this.mySql.query('CALL getAllStockValues()', (err, results) => {
         if (err) return reject(err)
 
-        results[0].forEach((r: GnuCashStockValue) => {
-          stockValues.push(r)
-        })
+        stockValues.push(...results[0])
 
         resolve(stockValues)
       })

@@ -17,3 +17,11 @@ ipcMain.on('get-reconcile-accounts', (event) => {
     console.log(err)
   })
 })
+
+ipcMain.on('get-import-accounts', (event) => {
+  container.get(GnuCashDatabaseService).GetImportAccounts().then(accounts => {
+    event.reply('get-import-accounts-reply', accounts)
+  }, (err) => {
+    console.log(err)
+  })
+})

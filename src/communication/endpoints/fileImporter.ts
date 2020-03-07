@@ -14,7 +14,7 @@ ipcMain.on('import-files', (event, file: GnuCashImportFile) => {
 
 ipcMain.on('parse-files', (event, importFile: GnuCashImportFile) => {
   console.log('Starting File Parse...')
-  container.get(TransactionParserService).GetTransactionsFromFile(importFile.FilePath, importFile.FileName, importFile.ImportType).then(transactions => {
+  container.get(TransactionParserService).GetTransactionsFromFile(importFile.FilePath, importFile.FileName, importFile.ImportType, importFile.ImportAccount).then(transactions => {
     importFile.Transactions = transactions
     event.reply('parse-files-reply', importFile)
   })

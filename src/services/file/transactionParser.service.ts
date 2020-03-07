@@ -27,7 +27,7 @@ export class TransactionParserService {
     ]
   }
 
-  GetTransactionsFromFile(filePath: string, fileName: string, importType?: string): Promise<GnuCashTransaction[]> {
+  GetTransactionsFromFile(filePath: string, fileName: string, importType: string, importAccount: string): Promise<GnuCashTransaction[]> {
     return new Promise((resolve, reject) => {
       fs.readFile(filePath, 'utf-8', (err, fileContent) => {
         if (err) throw err
@@ -36,7 +36,7 @@ export class TransactionParserService {
         const importInsitution = this.GetImportsInsitutions().filter(x => x.Id === importType)
 
         if (importInsitution.length === 1) {
-          return resolve(this.getTransactionsByFileType(importInsitution[0].BankInstitution, fileType, fileContent))
+          return resolve(this.getTransactionsByFileType(importInsitution[0].BankInstitution, fileType, fileContent, importAccount))
         } else {
           return reject(Error('Invalid File Import Type'))
         }
@@ -44,12 +44,12 @@ export class TransactionParserService {
     })
   }
 
-  private getTransactionsByFileType(institution: BankInstitution, fileType: string, fileContent: string): GnuCashTransaction[] {
+  private getTransactionsByFileType(institution: BankInstitution, fileType: string, fileContent: string, accountGuid: string): GnuCashTransaction[] {
     switch (fileType) {
       case '.pdf':
         return institution.ParsePDF()
       case '.csv':
-        return institution.ParseCSV(fileContent)
+        return institution.ParseCSV(fileContent, accountGuid)
       default:
         throw Error('Invalid File Type')
     }

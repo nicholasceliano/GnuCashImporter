@@ -5,7 +5,8 @@ import { FileParserService } from '../file/fileParser.service'
 
 @injectable()
 export class TDAmeritradeService extends FileParserService implements BankInstitution {
-  ParseCSV (fileContent: string): GnuCashTransaction[] {
+  ParseCSV (fileContent: string, accountGuid: string): GnuCashTransaction[] {
+    console.log(accountGuid)
     console.log(fileContent)
     throw Error('Not Implemented')
   }
