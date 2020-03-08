@@ -21,8 +21,7 @@ function createWindow(): void {
     height: 600,
     frame: false,
     webPreferences: {
-      nodeIntegration: true,
-      devTools: false
+      nodeIntegration: true
     }
   })
 

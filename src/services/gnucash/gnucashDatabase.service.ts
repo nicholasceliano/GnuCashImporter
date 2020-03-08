@@ -25,7 +25,6 @@ export class GnuCashDatabaseService {
   }
 
   InsertTransactions(transactions: GnuCashTransaction[]): GnuCashImportMetaData | void {
-    // Fix ValueNum/Denom and QuantityNum/Denom for Investments
     // build in lookup to find matching descriptions from past transactions and split to same account
 
     if (transactions.length > 0) {
@@ -35,6 +34,9 @@ export class GnuCashDatabaseService {
       }
 
       transactions.forEach(t => {
+        // Need to figure out if its a stock transaction or not
+        // Fix ValueNum/Denom and QuantityNum/Denom for Investments
+
         this.getAccountByGuid(t.AccountGuid).then(x => {
           t.TransactionGuid = v4().removeDashes()
           t = this.gnuCashPrice.SetTransactionValueFractions(t)
@@ -69,7 +71,8 @@ export class GnuCashDatabaseService {
       this.mySql.query(`SELECT c.guid, namespace, mnemonic, fullname, a.guid as reconcileAccountGuid
         FROM commodities c
           JOIN accounts a ON c.guid = a.commodity_guid AND a.name LIKE 'Imbalance-%'
-        WHERE namespace = "CURRENCY"`, (err, results) => {
+        WHERE namespace = "CURRENCY"
+        ORDER BY fullname`, (err, results) => {
         if (err) return reject(err)
 
         currencies.push(...results)
@@ -86,7 +89,8 @@ export class GnuCashDatabaseService {
       this.mySql.query(`SELECT
           guid, name, account_type, commodity_guid, parent_guid, hidden
         FROM accounts
-        WHERE account_type IN("ASSET", "BANK", "CREDIT") AND name NOT LIKE 'Imbalance-%' AND hidden = 0 AND placeholder = 0`, (err, results) => {
+        WHERE account_type IN("ASSET", "BANK", "CREDIT") AND name NOT LIKE 'Imbalance-%' AND hidden = 0 AND placeholder = 0
+        ORDER BY name`, (err, results) => {
         if (err) return reject(err)
 
         accounts.push(...results)
@@ -103,7 +107,26 @@ export class GnuCashDatabaseService {
       this.mySql.query(`SELECT
           guid, name, account_type, commodity_guid, parent_guid, hidden
         FROM accounts
-        WHERE (account_type IN("EXPENSE", "INCOME") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0`, (err, results) => {
+        WHERE (account_type IN("EXPENSE", "INCOME") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0
+        ORDER BY name`, (err, results) => {
+        if (err) return reject(err)
+
+        accounts.push(...results)
+
+        resolve(accounts)
+      })
+    })
+  }
+
+  GetStockReconcileAccounts(): Promise<GnuCashAccount[]> {
+    return new Promise((resolve, reject) => {
+      const accounts: GnuCashAccount[] = []
+
+      this.mySql.query(`SELECT
+          guid, name, account_type, commodity_guid, parent_guid, hidden
+        FROM accounts
+        WHERE (account_type IN("STOCK") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0
+        ORDER BY name`, (err, results) => {
         if (err) return reject(err)
 
         accounts.push(...results)

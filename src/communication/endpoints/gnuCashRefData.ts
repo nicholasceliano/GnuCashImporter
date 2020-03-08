@@ -18,6 +18,14 @@ ipcMain.on('get-reconcile-accounts', (event) => {
   })
 })
 
+ipcMain.on('get-stock-reconcile-accounts', (event) => {
+  container.get(GnuCashDatabaseService).GetStockReconcileAccounts().then(accounts => {
+    event.reply('get-stock-reconcile-accounts-reply', accounts)
+  }, (err) => {
+    console.log(err)
+  })
+})
+
 ipcMain.on('get-import-accounts', (event) => {
   container.get(GnuCashDatabaseService).GetImportAccounts().then(accounts => {
     event.reply('get-import-accounts-reply', accounts)

@@ -12,7 +12,7 @@ export class WellsFargoBankService extends FileParserService implements BankInst
   }
 
   ParseCSV (fileContent: string, accountGuid: string): GnuCashTransaction[] {
-    const columnStructure = ['Date', 'Amount','Blank1','Blank2','Description']
+    const columnStructure = ['Date', 'Amount', 'Blank1', 'Blank2', 'Description']
     const records = this.ParseCSVToBankRecord<WellsFargoBankRecord>(fileContent, columnStructure)
     const transactions = this.MapBankRecordsToGnuCashTransactions<WellsFargoBankRecord>(records, accountGuid,
       (r) => r.Description,

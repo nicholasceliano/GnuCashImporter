@@ -7,7 +7,7 @@ import { inject, injectable } from 'inversify'
 import { GnuCashImportFile } from '@/models/gnuCash/GnuCashImportFile'
 
 @injectable()
-export class FilePullerService {
+export class FileImportService {
   constructor(
     @inject(FileUtilityService) private fileUtility: FileUtilityService,
     @inject(GnuCashDatabaseService) private gnuCash: GnuCashDatabaseService) { }

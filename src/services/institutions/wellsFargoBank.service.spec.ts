@@ -14,7 +14,7 @@ describe('WellsFargoBankService', () => {
   })
 
   xit('ImportCSV', () => {
-    const resp = service.ParseCSV(csvFile)
+    const resp = service.ParseCSV(csvFile, '')
 
     expect(resp).to.be.eq({
       AccountGuid: '',

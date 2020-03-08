@@ -1,3 +1,5 @@
+import { StockTransactionData } from '../StockTransactionData'
+
 export interface GnuCashTransaction {
   AccountGuid: string;
   Description: string;
@@ -12,4 +14,7 @@ export interface GnuCashTransaction {
   ValueDenom?: number;
   QuantityNum?: number;
   QuantityDenom?: number;
+
+  IsStock: boolean;
+  StockData: StockTransactionData;
 }

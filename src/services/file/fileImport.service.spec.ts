@@ -1,17 +1,17 @@
 import 'reflect-metadata'
 import { container } from '../../inversify.config'
-import { FilePullerService } from './filePuller.service'
 import { GnuCashImportFile } from '../../models/gnuCash/GnuCashImportFile'
 import '../../prototypes/string.prototype'
 import '../../prototypes/date.prototype'
 import '../../prototypes/number.prototype'
+import { FileImportService } from './fileImport.service'
 
 describe('FilePullerService', () => {
-  let service: FilePullerService
+  let service: FileImportService
   let importFile: GnuCashImportFile
 
   beforeEach(() => {
-    service = container.get(FilePullerService)
+    service = container.get(FileImportService)
 
     importFile = {
       FilePath: '',

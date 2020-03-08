@@ -17,7 +17,7 @@
     <div v-for="f in uploadedFiles" :key="f.FilePath">
       <div class="fileDesc">
         <div title="Import Type" class="descType">
-          <select name="importTypeList" v-model="f.ImportType"  @change="clearTransactions(f)">
+          <select name="importTypeList" v-model="f.ImportType" @change="clearTransactions(f)">
             <option value>Select Import Type...</option>
             <option v-for="o in fileImportOptions" v-bind:key="o.Id" :value="o.Id">{{o.Name}}</option>
           </select>
@@ -39,6 +39,9 @@
             <tr>
               <th class="tblDescription">Description</th>
               <th class="tblAmount">Amount</th>
+              <th v-if="checkForStockTransaction(f.Transactions)" class="tblSymbol">Symbol</th>
+              <th v-if="checkForStockTransaction(f.Transactions)" class="tblPrice">Price</th>
+              <th v-if="checkForStockTransaction(f.Transactions)" class="tblQuantity">Quantity</th>
               <th class="tblDate">Date</th>
               <th class="tblReconcileAccount">Reconcile Account</th>
             </tr>
@@ -48,12 +51,24 @@
               <td v-bind:title="t.Description">{{t.Description}}</td>
               <td v-bind:title="t.Amount.toDollars()">{{t.Amount.toDollars()}}</td>
               <td
+                v-if="checkForStockTransaction(f.Transactions)"
+                v-bind:title="t.StockData.Symbol"
+              >{{t.StockData.Symbol}}</td>
+              <td
+                v-if="checkForStockTransaction(f.Transactions)"
+                v-bind:title="t.StockData.PriceString"
+              >{{t.StockData.PriceString}}</td>
+              <td
+                v-if="checkForStockTransaction(f.Transactions)"
+                v-bind:title="t.StockData.Quantity"
+              >{{t.StockData.Quantity}}</td>
+              <td
                 v-bind:title="t.PostDate.toMySqlDateTimeString()"
               >{{t.PostDate.toMySqlDateTimeString()}}</td>
               <td>
                 <select v-model="t.ReconcileAccountGuid">
                   <option
-                    v-for="a in reconcileAccounts"
+                    v-for="a in t.IsStock ? stockReconcileAccounts : reconcileAccounts"
                     :value="a.guid"
                     :key="a.guid"
                     v-bind:class="getAccClass(a.account_type)"
@@ -77,6 +92,7 @@ import FileUpload from '@/components/FileUpload.vue'
 import { GnuCashImportFile } from '@/models/gnuCash/GnuCashImportFile'
 import { GnuCashAccount } from '@/models/gnuCash/GnuCashAccount'
 import { SelectOption } from '../../models/utility/SelectOption'
+import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
 
 @Component({
   components: {
@@ -87,13 +103,27 @@ export default class FileImporter extends Vue {
   private uploadedFiles: GnuCashImportFile[] = []
   private fileUploadComponent!: FileUpload
   private reconcileAccounts!: GnuCashAccount[]
+  private stockReconcileAccounts!: GnuCashAccount[]
   private importAccounts!: GnuCashAccount[]
   private fileImportOptions: SelectOption[] = []
 
   async beforeMount() {
-    await this.getReconcileAccounts()
-    await this.getFileImportOptions()
-    await this.getImportAccounts()
+    await this.getData<GnuCashAccount[]>(
+      'reconcile-accounts',
+      r => (this.reconcileAccounts = r)
+    )
+    await this.getData<GnuCashAccount[]>(
+      'stock-reconcile-accounts',
+      r => (this.stockReconcileAccounts = r)
+    )
+    await this.getData<SelectOption[]>(
+      'file-import-options',
+      r => (this.fileImportOptions = r)
+    )
+    await this.getData<GnuCashAccount[]>(
+      'import-accounts',
+      r => (this.importAccounts = r)
+    )
   }
 
   mounted() {
@@ -165,48 +195,16 @@ export default class FileImporter extends Vue {
     return this.uploadedFiles.filter(x => x.FilePath === f.path).length > 0
   }
 
-  private getReconcileAccounts() {
-    return new Promise<GnuCashAccount[]>(resolve => {
-      ElectronApi.send('get-reconcile-accounts')
-      ElectronApi.on('get-reconcile-accounts-reply', (event, result) => {
-        ElectronApi.removeAllListeners('get-reconcile-accounts-reply')
+  private getData<T>(apiCall: string, promiseResp: (asd: T) => T) {
+    return new Promise<T>(resolve => {
+      ElectronApi.send(`get-${apiCall}`)
+      ElectronApi.on(`get-${apiCall}-reply`, (event, result) => {
+        ElectronApi.removeAllListeners(`get-${apiCall}-reply`)
 
         resolve(result)
       })
     }).then(reconcileAccounts => {
-      this.reconcileAccounts = reconcileAccounts.sort((a, b) =>
-        a.name > b.name ? 1 : -1
-      )
-    })
-  }
-
-  private getFileImportOptions() {
-    return new Promise<SelectOption[]>(resolve => {
-      ElectronApi.send('get-file-import-options')
-      ElectronApi.on('get-file-import-options-reply', (event, result) => {
-        ElectronApi.removeAllListeners('get-file-import-options-reply')
-
-        resolve(result)
-      })
-    }).then(fileImportOptions => {
-      this.fileImportOptions = fileImportOptions.sort((a, b) =>
-        a.Name > b.Name ? 1 : -1
-      )
-    })
-  }
-
-  private getImportAccounts() {
-    return new Promise<GnuCashAccount[]>(resolve => {
-      ElectronApi.send('get-import-accounts')
-      ElectronApi.on('get-import-accounts-reply', (event, result) => {
-        ElectronApi.removeAllListeners('get-import-accounts-reply')
-
-        resolve(result)
-      })
-    }).then(importAccounts => {
-      this.importAccounts = importAccounts.sort((a, b) =>
-        a.name > b.name ? 1 : -1
-      )
+      promiseResp(reconcileAccounts)
     })
   }
 
@@ -219,6 +217,10 @@ export default class FileImporter extends Vue {
       default:
         return ''
     }
+  }
+
+  private checkForStockTransaction(t: GnuCashTransaction[]) {
+    return t.filter(t => t.IsStock).length > 0
   }
 }
 </script>
@@ -287,13 +289,17 @@ export default class FileImporter extends Vue {
     }
   }
   .tblDescription {
-    width: 45%;
+    min-width: 20%;
+    max-width: 45%;
   }
-  .tblAmount {
-    width: 15%;
+  .tblAmount,
+  .tblSymbol,
+  .tblPrice,
+  .tblQuantity {
+    width: 10%;
   }
   .tblDate {
-    width: 25%;
+    width: 20%;
   }
   .tblReconcileAccount {
     width: 20%;
