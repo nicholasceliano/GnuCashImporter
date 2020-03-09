@@ -66,10 +66,10 @@
                 v-bind:title="t.PostDate.toMySqlDateTimeString()"
               >{{t.PostDate.toMySqlDateTimeString()}}</td>
               <td>
-                <select v-model="t.ReconcileAccountGuid">
+                <select v-model="t.ReconcileAccount">
                   <option
                     v-for="a in t.IsStock ? stockReconcileAccounts : reconcileAccounts"
-                    :value="a.guid"
+                    :value="a"
                     :key="a.guid"
                     v-bind:class="getAccClass(a.account_type)"
                   >{{ a.name }}</option>

@@ -4,14 +4,16 @@ import { USAABankRecord } from '../../models/institutions/USAABankRecord'
 import { injectable, inject } from 'inversify'
 import { ConfigurationService } from '../configuration.service'
 import { FileParserService } from '../file/fileParser.service'
+import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service'
 
 @injectable()
 export class USAABankService extends FileParserService implements BankInstitution {
-  constructor(@inject(ConfigurationService) protected configurationService: ConfigurationService) {
-    super(configurationService)
+  constructor(@inject(ConfigurationService) protected configurationService: ConfigurationService,
+    @inject(GnuCashDatabaseService) protected gnuCashDatabaseService: GnuCashDatabaseService) {
+    super(configurationService, gnuCashDatabaseService)
   }
 
-  ParseCSV (fileContent: string, accountGuid: string): GnuCashTransaction[] {
+  ParseCSV (fileContent: string, accountGuid: string): Promise<GnuCashTransaction[]> {
     const columnStructure = ['Blank1', 'Blank2', 'Date', 'Blank3', 'Description', 'Type', 'Amount']
     const records = this.ParseCSVToBankRecord<USAABankRecord>(fileContent, columnStructure)
     const transactions = this.MapBankRecordsToGnuCashTransactions<USAABankRecord>(records, accountGuid,
@@ -22,7 +24,7 @@ export class USAABankService extends FileParserService implements BankInstitutio
     return transactions
   }
 
-  ParsePDF (): GnuCashTransaction[] {
+  ParsePDF (): Promise<GnuCashTransaction[]> {
     throw Error('Not Implemented')
   }
 }

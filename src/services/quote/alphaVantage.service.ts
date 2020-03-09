@@ -72,7 +72,7 @@ export class AlphaVantageService {
   private async insertQuotesIntoGnuCash(stockValues: GnuCashStockValue[], quote: SecurityRecord, loopIndex: number) {
     const quoteInfo = `${quote.Symbol}: ${quote.Price.toDollars()} ${quote.Date.toMySqlDateTimeString()}`
     const commodityGuid = stockValues.filter(x => x.stockName === quote.Symbol)[0].commodity_guid
-    const price = this.gnuCashPriceService.CalcValueFraction(quote.Price)
+    const price = this.gnuCashPriceService.CalcSimplifiedFraction(quote.Price)
 
     /* eslint-disable @typescript-eslint/camelcase */
     await this.gnuCashDatabaseService.InsertPriceRecord({

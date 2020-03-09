@@ -3,5 +3,4 @@ export interface StockTransactionData {
   Price?: number;
   PriceString: string;
   Quantity?: number;
-  IsStock: boolean;
 }

@@ -28,23 +28,18 @@ export class TransactionParserService {
   }
 
   GetTransactionsFromFile(filePath: string, fileName: string, importType: string, importAccount: string): Promise<GnuCashTransaction[]> {
-    return new Promise((resolve, reject) => {
-      fs.readFile(filePath, 'utf-8', (err, fileContent) => {
-        if (err) throw err
+    const fileContent = fs.readFileSync(filePath, 'utf-8')
+    const fileType = this.fileUtility.GetFileType(fileName)
+    const importInsitution = this.GetImportsInsitutions().filter(x => x.Id === importType)
 
-        const fileType = this.fileUtility.GetFileType(fileName)
-        const importInsitution = this.GetImportsInsitutions().filter(x => x.Id === importType)
-
-        if (importInsitution.length === 1) {
-          return resolve(this.getTransactionsByFileType(importInsitution[0].BankInstitution, fileType, fileContent, importAccount))
-        } else {
-          return reject(Error('Invalid File Import Type'))
-        }
-      })
-    })
+    if (importInsitution.length === 1) {
+      return this.getTransactionsByFileType(importInsitution[0].BankInstitution, fileType, fileContent, importAccount)
+    } else {
+      throw Error('Invalid File Import Type')
+    }
   }
 
-  private getTransactionsByFileType(institution: BankInstitution, fileType: string, fileContent: string, accountGuid: string): GnuCashTransaction[] {
+  private getTransactionsByFileType(institution: BankInstitution, fileType: string, fileContent: string, accountGuid: string): Promise<GnuCashTransaction[]> {
     switch (fileType) {
       case '.pdf':
         return institution.ParsePDF()

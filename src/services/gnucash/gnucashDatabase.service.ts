@@ -34,19 +34,14 @@ export class GnuCashDatabaseService {
       }
 
       transactions.forEach(t => {
-        // Need to figure out if its a stock transaction or not
-        // Fix ValueNum/Denom and QuantityNum/Denom for Investments
+        t.TransactionGuid = v4().removeDashes()
+        t = this.gnuCashPrice.SetTransactionValueFractions(t)
 
-        this.getAccountByGuid(t.AccountGuid).then(x => {
-          t.TransactionGuid = v4().removeDashes()
-          t = this.gnuCashPrice.SetTransactionValueFractions(t)
+        this.insertTransaction(t)
+        this.insertTransactionSplit(t)
+        this.insertImbalanceTransactionSplit(t)
 
-          this.insertTransaction(t)
-          this.insertTransactionSplit(t)
-          this.insertImbalanceTransactionSplit(t)
-
-          console.log(`Inserted Transaction: ${x.name} - ${t.Description}`)
-        })
+        console.log(`Inserted Transaction: ${t.ReconcileAccount.name} - ${t.Description}`)
       })
 
       return importMetaData
@@ -150,19 +145,7 @@ export class GnuCashDatabaseService {
     })
   }
 
-  private insertTransaction(transaction: GnuCashTransaction): void {
-    this.mySql.query(`INSERT INTO transactions VALUES (
-      '${transaction.TransactionGuid}',
-      '${transaction.CurrencyGuid}',
-      '',
-      '${transaction.PostDate.toMySqlDateTimeString()}',
-      '${transaction.CreateDate.toMySqlDateTimeString()}',
-      '${transaction.Description}')`, (err) => {
-      if (err) throw Error(err.stack)
-    })
-  }
-
-  private getAccountByGuid(accountId: string): Promise<GnuCashAccount> {
+  GetAccountByGuid(accountId: string): Promise<GnuCashAccount> {
     return new Promise((resolve, reject) => {
       let account: GnuCashAccount
 
@@ -181,11 +164,23 @@ export class GnuCashDatabaseService {
     })
   }
 
+  private insertTransaction(transaction: GnuCashTransaction): void {
+    this.mySql.query(`INSERT INTO transactions VALUES (
+      '${transaction.TransactionGuid}',
+      '${transaction.CurrencyGuid}',
+      '',
+      '${transaction.PostDate.toMySqlDateTimeString()}',
+      '${transaction.CreateDate.toMySqlDateTimeString()}',
+      '${transaction.Description}')`, (err) => {
+      if (err) throw Error(err.stack)
+    })
+  }
+
   private insertTransactionSplit(transaction: GnuCashTransaction, rootSplit = true): void {
     this.mySql.query(`INSERT INTO splits VALUES (
       '${v4().removeDashes()}',
       '${transaction.TransactionGuid}',
-      '${rootSplit ? transaction.AccountGuid : transaction.ReconcileAccountGuid}',
+      '${rootSplit ? transaction.AccountGuid : transaction.ReconcileAccount.guid}',
       '',
       '',
       'n',
@@ -201,7 +196,28 @@ export class GnuCashDatabaseService {
 
   private insertImbalanceTransactionSplit(transaction: GnuCashTransaction): void {
     transaction = this.gnuCashPrice.SetTransactionValueFractions(transaction, false)
-
     this.insertTransactionSplit(transaction, false)
+
+    if (transaction.IsStock) {
+      this.insertStockImbalanceTransactionStockPrice(transaction)
+    }
+  }
+
+  private insertStockImbalanceTransactionStockPrice(transaction: GnuCashTransaction): void {
+    if (transaction.StockData && transaction.StockData.Quantity) {
+      const quotePrice = transaction.Amount / transaction.StockData.Quantity
+      const price = this.gnuCashPrice.CalcSimplifiedFraction(quotePrice)
+
+      /* eslint-disable @typescript-eslint/camelcase */
+      this.InsertPriceRecord({
+        commodity_guid: transaction.ReconcileAccount.commodity_guid,
+        currency_guid: transaction.ReconcileAccount.guid,
+        date: transaction.PostDate,
+        source: 'user:price-editor', // need to change these prob
+        type: 'last', // need to change these prob
+        value_num: price.Numerator,
+        value_denom: price.Denominator
+      } as GnuCashPrice)
+    }
   }
 }

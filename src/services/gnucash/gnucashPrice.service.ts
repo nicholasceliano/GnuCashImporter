@@ -5,20 +5,28 @@ import { injectable } from 'inversify'
 @injectable()
 export class GnuCashPriceService {
   SetTransactionValueFractions (transaction: GnuCashTransaction, rootSplit = true): GnuCashTransaction {
-    const valueFraction = this.CalcValueFraction(rootSplit ? transaction.Amount : -transaction.Amount)
+    const valueFraction = this.CalcSimplifiedFraction(rootSplit ? transaction.Amount : -transaction.Amount)
 
     transaction.ValueNum = valueFraction.Numerator
     transaction.ValueDenom = valueFraction.Denominator
-    transaction.QuantityNum = valueFraction.Numerator
-    transaction.QuantityDenom = valueFraction.Denominator
+
+    if (!rootSplit && transaction.IsStock && transaction.StockData && transaction.StockData.Quantity) {
+      const quantityFraction = this.CalcSimplifiedFraction(transaction.StockData.Quantity)
+
+      transaction.QuantityNum = quantityFraction.Numerator
+      transaction.QuantityDenom = quantityFraction.Denominator
+    } else {
+      transaction.QuantityNum = valueFraction.Numerator
+      transaction.QuantityDenom = valueFraction.Denominator
+    }
 
     return transaction
   }
 
-  CalcValueFraction (price: number): Fraction {
+  CalcSimplifiedFraction (price: number): Fraction {
     const priceStr = price.toFixed(2).toString()
-    const num = this.calcValueNum(priceStr)
-    const denom = this.calcValueDenom(priceStr)
+    const num = this.calcFractionNum(priceStr)
+    const denom = this.calcFractionDenom(priceStr)
 
     const simplifiedFrac = Number.prototype.reduce(num, denom)
 
@@ -33,7 +41,7 @@ export class GnuCashPriceService {
     } as Fraction
   }
 
-  private calcValueNum (price: string): number {
+  private calcFractionNum (price: string): number {
     price = price.replace('.', '')
 
     if (price.length >= 10) {
@@ -47,7 +55,7 @@ export class GnuCashPriceService {
     return parseInt(price)
   }
 
-  private calcValueDenom (price: string): number {
+  private calcFractionDenom (price: string): number {
     const decimalIndex = price.indexOf('.')
     let denom = '1'
 
@@ -56,13 +64,5 @@ export class GnuCashPriceService {
     }
 
     return parseInt(denom)
-  }
-
-  private calcQuantityNum (): void {
-    throw Error('Not Implemented - Required for Investment Transactions')
-  }
-
-  private calcQuantityDenom (): void {
-    throw Error('Not Implemented - Required for Investment Transactions')
   }
 }
