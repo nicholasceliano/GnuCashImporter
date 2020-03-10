@@ -1,7 +1,7 @@
 import { container } from '../../inversify.config'
 import { FileParserService } from './fileParser.service'
 
-describe.only('FileParserService', () => {
+describe('FileParserService', () => {
   let service: FileParserService
 
   beforeEach(() => {

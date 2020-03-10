@@ -23,8 +23,8 @@ export class GnuCashPriceService {
     return transaction
   }
 
-  CalcSimplifiedFraction (price: number): Fraction {
-    const priceStr = price.toFixed(2).toString()
+  CalcSimplifiedFraction (price: number, decimalLength = 4): Fraction {
+    const priceStr = price.toFixed(decimalLength).toString()
     const num = this.calcFractionNum(priceStr)
     const denom = this.calcFractionDenom(priceStr)
 

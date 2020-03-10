@@ -9,6 +9,6 @@ describe('TransactionParserService', () => {
   })
 
   xit('', () => {
-    service.GetTransactionsFromFile('', '', '')
+    service.GetTransactionsFromFile('', '', '', '')
   })
 })

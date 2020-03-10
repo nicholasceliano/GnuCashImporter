@@ -117,6 +117,7 @@ export class GnuCashDatabaseService {
     return new Promise((resolve, reject) => {
       const accounts: GnuCashAccount[] = []
 
+      // this needs to be refactored to show heiarchy
       this.mySql.query(`SELECT
           guid, name, account_type, commodity_guid, parent_guid, hidden
         FROM accounts
@@ -206,15 +207,15 @@ export class GnuCashDatabaseService {
   private insertStockImbalanceTransactionStockPrice(transaction: GnuCashTransaction): void {
     if (transaction.StockData && transaction.StockData.Quantity) {
       const quotePrice = transaction.Amount / transaction.StockData.Quantity
-      const price = this.gnuCashPrice.CalcSimplifiedFraction(quotePrice)
+      const price = this.gnuCashPrice.CalcSimplifiedFraction(-quotePrice, 6)
 
       /* eslint-disable @typescript-eslint/camelcase */
       this.InsertPriceRecord({
         commodity_guid: transaction.ReconcileAccount.commodity_guid,
-        currency_guid: transaction.ReconcileAccount.guid,
+        currency_guid: this.configService.ConfigData.GnuCashDefaults.CurrencyGUID,
         date: transaction.PostDate,
-        source: 'user:price-editor', // need to change these prob
-        type: 'last', // need to change these prob
+        source: 'Finance::Quote',
+        type: 'last',
         value_num: price.Numerator,
         value_denom: price.Denominator
       } as GnuCashPrice)

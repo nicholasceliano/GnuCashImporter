@@ -17,6 +17,7 @@ describe('FilePullerService', () => {
       FilePath: '',
       FileName: '',
       ImportType: '',
+      ImportAccount: '',
       Transactions: []
     } as GnuCashImportFile
   })

@@ -33,8 +33,8 @@ export class FileImportService {
     const destFolder = `${environment.fileUploadDirectory}/${environment.archiveFolderName}`
     const destFileName = `${importType}_${importMetaData.EarliestRecordDate.getTime()}_${importMetaData.LatestRecordDate.getTime()}${fileType}`
 
-    fs.access(`${destFolder}/${destFileName}`, (exists) => {
-      if (!exists) {
+    fs.access(`${destFolder}/${destFileName}`, (fileDoesntExist) => {
+      if (fileDoesntExist) {
         fs.rename(filePath, `${destFolder}/${destFileName}`, (err) => {
           if (err) throw err
         })
