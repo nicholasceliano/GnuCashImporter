@@ -5,4 +5,5 @@ export interface GnuCashAccount {
   commodity_guid: string;
   parent_guid: string;
   hidden: boolean;
+  placeholder: boolean;
 }
