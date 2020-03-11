@@ -1,14 +1,14 @@
-import { USAABankService } from './USAABank.service'
+import { TDCreditCardService } from './tdCreditCard.service'
 import { assert, expect } from 'chai'
-import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
-import { container } from '../../inversify.config'
+import { GnuCashTransaction } from '../../../models/gnuCash/GnuCashTransaction'
+import { container } from '../../../inversify.config'
 
-describe('USAABankService', () => {
-  let service: USAABankService
+describe('TDCreditCardService', () => {
+  let service: TDCreditCardService
   let csvFile: string
 
   beforeEach(() => {
-    service = container.get(USAABankService)
+    service = container.get(TDCreditCardService)
 
     csvFile = 'Date,Time' // Need to get this from file
   })

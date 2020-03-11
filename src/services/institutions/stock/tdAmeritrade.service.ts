@@ -1,11 +1,11 @@
-import { BankInstitution } from '../../models/BankInstitution'
-import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
+import { BankInstitution } from '../../../models/BankInstitution'
+import { GnuCashTransaction } from '../../../models/gnuCash/GnuCashTransaction'
 import { injectable, inject } from 'inversify'
-import { FileParserService } from '../file/fileParser.service'
-import { ConfigurationService } from '../configuration.service'
+import { FileParserService } from '../../file/fileParser.service'
+import { ConfigurationService } from '../../configuration.service'
 import { TDAmeritradeRecord } from '@/models/institutions/TDAmeritradeRecord'
 import { StockTransactionData } from '@/models/StockTransactionData'
-import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service'
+import { GnuCashDatabaseService } from '../../gnucash/gnucashDatabase.service'
 
 @injectable()
 export class TDAmeritradeService extends FileParserService implements BankInstitution {

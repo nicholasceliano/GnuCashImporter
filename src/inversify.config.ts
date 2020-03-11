@@ -1,8 +1,8 @@
 import { Container } from 'inversify'
 import { GnuCashPriceService } from './services/gnucash/gnucashPrice.service'
 import { FileUtilityService } from './services/file/fileUtility.service'
-import { TDAmeritradeService } from './services/institutions/tdAmeritrade.service'
-import { AllyBankService } from './services/institutions/allyBank.service'
+import { TDAmeritradeService } from './services/institutions/stock/tdAmeritrade.service'
+import { AllyBankService } from './services/institutions/bank/allyBank.service'
 import { FileImportService } from './services/file/fileImport.service'
 import { GnuCashDatabaseService } from './services/gnucash/gnucashDatabase.service'
 import { ConfigurationService } from './services/configuration.service'
@@ -10,8 +10,8 @@ import { TransactionParserService } from './services/file/transactionParser.serv
 import { AlphaVantageService } from './services/quote/alphaVantage.service'
 import { QuotePullerService } from './services/quote/quotePuller.service'
 import { UtilityService } from './services/utility.service'
-import { USAABankService } from './services/institutions/USAABank.service'
-import { WellsFargoBankService } from './services/institutions/wellsFargoBank.service'
+import { USAABankService } from './services/institutions/bank/USAABank.service'
+import { WellsFargoBankService } from './services/institutions/bank/wellsFargoBank.service'
 import { FileParserService } from './services/file/fileParser.service'
 
 const container = new Container()

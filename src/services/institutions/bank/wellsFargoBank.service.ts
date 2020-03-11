@@ -1,10 +1,10 @@
-import { BankInstitution } from '../../models/BankInstitution'
-import { GnuCashTransaction } from '../../models/gnuCash/GnuCashTransaction'
-import { WellsFargoBankRecord } from '../../models/institutions/WellsFargoBankRecord'
+import { BankInstitution } from '../../../models/BankInstitution'
+import { GnuCashTransaction } from '../../../models/gnuCash/GnuCashTransaction'
+import { WellsFargoBankRecord } from '../../../models/institutions/WellsFargoBankRecord'
 import { injectable, inject } from 'inversify'
-import { ConfigurationService } from '../configuration.service'
-import { FileParserService } from '../file/fileParser.service'
-import { GnuCashDatabaseService } from '../gnucash/gnucashDatabase.service'
+import { ConfigurationService } from '../../configuration.service'
+import { FileParserService } from '../../file/fileParser.service'
+import { GnuCashDatabaseService } from '../../gnucash/gnucashDatabase.service'
 
 @injectable()
 export class WellsFargoBankService extends FileParserService implements BankInstitution {
