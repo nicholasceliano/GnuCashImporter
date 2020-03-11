@@ -82,7 +82,7 @@ export class GnuCashDatabaseService {
       const accounts: GnuCashAccount[] = []
 
       this.mySql.query(`SELECT
-          guid, name, account_type, commodity_guid, parent_guid, hidden
+          guid, name, account_type, commodity_guid, parent_guid, hidden, placeholder
         FROM accounts
         WHERE account_type IN("ASSET", "BANK", "CREDIT") AND name NOT LIKE 'Imbalance-%' AND hidden = 0 AND placeholder = 0
         ORDER BY name`, (err, results) => {
@@ -100,7 +100,7 @@ export class GnuCashDatabaseService {
       const accounts: GnuCashAccount[] = []
 
       this.mySql.query(`SELECT
-          guid, name, account_type, commodity_guid, parent_guid, hidden
+          guid, name, account_type, commodity_guid, parent_guid, hidden, placeholder
         FROM accounts
         WHERE (account_type IN("EXPENSE", "INCOME") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0
         ORDER BY name`, (err, results) => {
@@ -117,16 +117,21 @@ export class GnuCashDatabaseService {
     return new Promise((resolve, reject) => {
       const accounts: GnuCashAccount[] = []
 
-      this.mySql.query(`SELECT
-          guid, name, account_type, commodity_guid, parent_guid, hidden
-        FROM accounts
-        WHERE (account_type IN("STOCK") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0
-        ORDER BY name`, (err, results) => {
-        if (err) return reject(err)
+      this.getAccounts().then(accountList => {
+        this.mySql.query(`SELECT
+            guid, name, account_type, commodity_guid, parent_guid, hidden, placeholder
+          FROM accounts
+          WHERE (account_type IN("STOCK") OR name like 'Imbalance-%') AND hidden = 0 AND placeholder = 0
+          ORDER BY name`, (err, results) => {
+          if (err) return reject(err)
 
-        accounts.push(...results)
+          results.forEach((r: GnuCashAccount) => {
+            r.name = this.setReconcileAccountName(r.guid, accountList, []).join(':')
+            accounts.push(r)
+          })
 
-        resolve(accounts)
+          resolve(accounts)
+        })
       })
     })
   }
@@ -150,7 +155,7 @@ export class GnuCashDatabaseService {
       let account: GnuCashAccount
 
       this.mySql.query(`SELECT
-        guid, name, account_type, commodity_guid, parent_guid, hidden
+        guid, name, account_type, commodity_guid, parent_guid, hidden, placeholder
         FROM accounts
         WHERE guid='${accountId}' LIMIT 1`, (err, results) => {
         if (err) return reject(err)
@@ -160,6 +165,24 @@ export class GnuCashDatabaseService {
         })
 
         resolve(account)
+      })
+    })
+  }
+
+  private getAccounts(): Promise<GnuCashAccount[]> {
+    return new Promise((resolve, reject) => {
+      const accounts: GnuCashAccount[] = []
+
+      this.mySql.query(`SELECT
+          guid, name, account_type, commodity_guid, parent_guid, hidden, placeholder
+        FROM accounts
+        WHERE hidden = 0
+        ORDER BY name`, (err, results) => {
+        if (err) return reject(err)
+
+        accounts.push(...results)
+
+        resolve(accounts)
       })
     })
   }
@@ -206,18 +229,31 @@ export class GnuCashDatabaseService {
   private insertStockImbalanceTransactionStockPrice(transaction: GnuCashTransaction): void {
     if (transaction.StockData && transaction.StockData.Quantity) {
       const quotePrice = transaction.Amount / transaction.StockData.Quantity
-      const price = this.gnuCashPrice.CalcSimplifiedFraction(quotePrice)
+      const price = this.gnuCashPrice.CalcSimplifiedFraction(-quotePrice, 6)
 
       /* eslint-disable @typescript-eslint/camelcase */
       this.InsertPriceRecord({
         commodity_guid: transaction.ReconcileAccount.commodity_guid,
-        currency_guid: transaction.ReconcileAccount.guid,
+        currency_guid: this.configService.ConfigData.GnuCashDefaults.CurrencyGUID,
         date: transaction.PostDate,
-        source: 'user:price-editor', // need to change these prob
-        type: 'last', // need to change these prob
+        source: 'Finance::Quote',
+        type: 'last',
         value_num: price.Numerator,
         value_denom: price.Denominator
       } as GnuCashPrice)
     }
+  }
+
+  private setReconcileAccountName(parentGuid: string, accounts: GnuCashAccount[], retStr: string[]) {
+    const account = accounts.filter(x => x.guid === parentGuid)[0]
+
+    if (account) {
+      if (account.parent_guid && !account.placeholder) {
+        retStr.push(account.name)
+      }
+      retStr = this.setReconcileAccountName(account.parent_guid, accounts, retStr)
+    }
+
+    return retStr
   }
 }
