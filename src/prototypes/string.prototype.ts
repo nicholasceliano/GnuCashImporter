@@ -1,6 +1,7 @@
 declare interface String {
     removeDashes: () => string;
     removeParentheses: () => string;
+    removeDollarSign: () => string;
 }
 
 ((): void => {
@@ -10,5 +11,9 @@ declare interface String {
 
   String.prototype.removeParentheses = function (this: string): string {
     return this.replace(/([()])/g, '')
+  }
+
+  String.prototype.removeDollarSign = function (this: string): string {
+    return this.replace(/\$/g, '')
   }
 })()

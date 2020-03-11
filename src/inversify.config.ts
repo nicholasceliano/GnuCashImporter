@@ -13,6 +13,7 @@ import { UtilityService } from './services/utility.service'
 import { USAABankService } from './services/institutions/bank/USAABank.service'
 import { WellsFargoBankService } from './services/institutions/bank/wellsFargoBank.service'
 import { FileParserService } from './services/file/fileParser.service'
+import { TDBankCreditCardService } from './services/institutions/creditCard/tdBankCreditCard.service'
 
 const container = new Container()
 
@@ -25,6 +26,7 @@ container.bind<USAABankService>(USAABankService).toSelf()
 container.bind<AllyBankService>(AllyBankService).toSelf()
 container.bind<WellsFargoBankService>(WellsFargoBankService).toSelf()
 container.bind<TDAmeritradeService>(TDAmeritradeService).toSelf()
+container.bind<TDBankCreditCardService>(TDBankCreditCardService).toSelf()
 container.bind<ConfigurationService>(ConfigurationService).toSelf().inSingletonScope()
 container.bind<TransactionParserService>(TransactionParserService).toSelf()
 container.bind<UtilityService>(UtilityService).toSelf()

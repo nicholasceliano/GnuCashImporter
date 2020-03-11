@@ -10,12 +10,18 @@ export abstract class FileParserService {
   constructor(@inject(ConfigurationService) protected configurationService: ConfigurationService,
     @inject(GnuCashDatabaseService) protected gnuCashDatabaseService: GnuCashDatabaseService) { }
 
-  ParseCSVToBankRecord<T>(fileContent: string, columnStructure?: string[]): T[] {
+  ParseCSVToBankRecord<T>(fileContent: string, columnStructure?: string[] | undefined, parseOptions: any = {}): T[] {
     /* eslint-disable @typescript-eslint/camelcase */
-    return parse(fileContent, {
-      columns: columnStructure || (header => header.map((column: string) => column.trim())),
+    const options: any = {
+      columns: columnStructure || ((header: string[]) => header.map((column: string) => column.trim())),
       skip_lines_with_error: true
-    })
+    }
+
+    for (const key of Object.keys(parseOptions)) {
+      options[key] = parseOptions[key]
+    }
+
+    return parse(fileContent, options)
   }
 
   async MapBankRecordsToGnuCashTransactions<T>(bankRecords: T[], accountGuid: string,

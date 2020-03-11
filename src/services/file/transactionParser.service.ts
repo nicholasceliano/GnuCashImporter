@@ -8,19 +8,22 @@ import { USAABankService } from '../institutions/bank/USAABank.service'
 import { WellsFargoBankService } from '../institutions/bank/wellsFargoBank.service'
 import { FileUtilityService } from './fileUtility.service'
 import { InsitutionOption } from '../../models/InstitutionOption'
+import { TDBankCreditCardService } from '../institutions/creditCard/tdBankCreditCard.service'
 
 @injectable()
 export class TransactionParserService {
   constructor(
     @inject(FileUtilityService) private fileUtility: FileUtilityService,
     @inject(AllyBankService) private allyBank: BankInstitution,
+    @inject(TDBankCreditCardService) private tdBankCreditCard: TDBankCreditCardService,
+    @inject(TDAmeritradeService) private tdAmeritrade: BankInstitution,
     @inject(USAABankService) private USAABank: BankInstitution,
-    @inject(WellsFargoBankService) private wellsFargoBank: BankInstitution,
-    @inject(TDAmeritradeService) private tdAmeritrade: BankInstitution) { }
+    @inject(WellsFargoBankService) private wellsFargoBank: BankInstitution) { }
 
   GetImportsInsitutions(): InsitutionOption[] {
     return [
       { Id: 'ALLY', Name: 'Ally Bank', BankInstitution: this.allyBank },
+      { Id: 'TDCC', Name: 'TD Bank Credit Card', BankInstitution: this.tdBankCreditCard },
       { Id: 'TDAM', Name: 'TD Ameritrade', BankInstitution: this.tdAmeritrade },
       { Id: 'USAA', Name: 'USAA Bank', BankInstitution: this.USAABank },
       { Id: 'WFBA', Name: 'Wells Fargo Bank', BankInstitution: this.wellsFargoBank }
