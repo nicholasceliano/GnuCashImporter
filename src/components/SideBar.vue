@@ -23,6 +23,10 @@ export default class SideBar extends Vue {
     {
       route: 'databasebackup',
       name: 'Database Backup'
+    },
+    {
+      route: 'accounts',
+      name: 'Accounts'
     }
   ]
 }
