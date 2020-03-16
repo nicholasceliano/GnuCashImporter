@@ -17,6 +17,17 @@ export class GoldCashDatabaseService {
     })
   }
 
+  InsertAccount(account: GoldCashAccount){
+    account.guid = v4().removeDashes()
+    this.mySql.query(`INSERT INTO accounts VALUES (
+      '${account.guid}',
+      '${account.name}',
+      '${account.owner}')`, (err) => {
+      if (err) throw Error(err.stack)
+    })
+    return Promise.resolve()
+  }
+
   GetAccounts(): Promise<GoldCashAccount[]> {
     return new Promise((resolve, reject) => {
       const accounts: GoldCashAccount[] = []
