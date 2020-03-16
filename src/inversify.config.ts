@@ -14,6 +14,7 @@ import { USAABankService } from './services/institutions/bank/USAABank.service'
 import { WellsFargoBankService } from './services/institutions/bank/wellsFargoBank.service'
 import { FileParserService } from './services/file/fileParser.service'
 import { TDBankCreditCardService } from './services/institutions/creditCard/tdBankCreditCard.service'
+import { GoldCashDatabaseService } from './services/goldCash/goldCashDatabase.service'
 
 const container = new Container()
 
@@ -30,6 +31,7 @@ container.bind<TDBankCreditCardService>(TDBankCreditCardService).toSelf()
 container.bind<ConfigurationService>(ConfigurationService).toSelf().inSingletonScope()
 container.bind<TransactionParserService>(TransactionParserService).toSelf()
 container.bind<UtilityService>(UtilityService).toSelf()
+container.bind<GoldCashDatabaseService>(GoldCashDatabaseService).toSelf()
 
 container.bind<QuotePullerService>(QuotePullerService).toSelf()
 container.bind<AlphaVantageService>(AlphaVantageService).toSelf()

@@ -1,12 +1,15 @@
 import { ipcMain } from 'electron'
-import { container } from '@/inversify.config'
+import { container } from '../../inversify.config'
+import { GoldCashDatabaseService } from '../../services/goldCash/goldCashDatabase.service'
 
 ipcMain.on('add-account', (event) => {
-  console.log('added account')
+  console.log('server received request to add account')
 })
 
 ipcMain.on('get-accounts', (event) => {
-  console.log('requested account list from api')
-  const resp = ['str1', 'str2', 'str3', 'str4']
-  event.reply('get-accounts-reply', resp)
+  container.get(GoldCashDatabaseService).GetAccounts().then(accounts => {
+    event.reply('get-accounts-reply', accounts)
+  }, (err) => {
+    console.log(err)
+  })
 })

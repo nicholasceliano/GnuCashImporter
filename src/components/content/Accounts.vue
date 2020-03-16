@@ -1,7 +1,8 @@
 <template>
   <div>
     <button @click="addAccount()">Add Account</button>
-    <div v-for="i in accountList" :key="i">{{i}}</div>
+    <div><h2>Current Accounts:</h2></div>
+    <div v-for="i in accountList" :key="i">{{i.name}}</div>
   </div>
 </template>
 
