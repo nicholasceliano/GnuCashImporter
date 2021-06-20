@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { ElectronApi } from '@/communication/electronSwitch'
-import { GoldCashAccount } from '../../models/goldCash/goldCashAccount'
+import { GoldCashAccount } from '@/models/goldCash/GoldCashAccount'
 
 @Component
 export default class Accounts extends Vue {

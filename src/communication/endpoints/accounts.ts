@@ -1,6 +1,6 @@
+import { container } from '@/inversify.config'
+import { GoldCashAccount } from '@/models/goldCash/GoldCashAccount'
 import { ipcMain } from 'electron'
-import { container } from '../../inversify.config'
-import { GoldCashAccount } from '../../models/goldCash/goldCashAccount'
 import { GoldCashDatabaseService } from '../../services/goldCash/goldCashDatabase.service'
 
 ipcMain.on('add-account', (event, account: GoldCashAccount) => {

@@ -1,8 +1,8 @@
 import mysql from 'mysql'
 import { v4 } from 'uuid'
-import { GoldCashAccount } from '../../models/goldCash/goldCashAccount'
 import { injectable, inject } from 'inversify'
 import { ConfigurationService } from '../configuration.service'
+import { GoldCashAccount } from '@/models/goldCash/GoldCashAccount';
 
 @injectable()
 export class GoldCashDatabaseService {
@@ -17,7 +17,7 @@ export class GoldCashDatabaseService {
     })
   }
 
-  InsertAccount(account: GoldCashAccount){
+  InsertAccount(account: GoldCashAccount) {
     account.guid = v4().removeDashes()
     this.mySql.query(`INSERT INTO accounts VALUES (
       '${account.guid}',
@@ -41,5 +41,4 @@ export class GoldCashDatabaseService {
       })
     })
   }
-
 }

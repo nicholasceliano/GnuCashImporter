@@ -1,8 +1,9 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import 'reflect-metadata'
-require('./communication/endpoints/fileImporter')
 require('./communication/endpoints/configuration')
+require('./communication/endpoints/databaseBackup')
+require('./communication/endpoints/fileImporter')
 require('./communication/endpoints/gnuCashRefData')
 require('./communication/endpoints/quotePuller')
 require('./communication/endpoints/accounts')
@@ -22,6 +23,7 @@ function createWindow(): void {
     height: 600,
     frame: false,
     webPreferences: {
+      devTools: false,
       nodeIntegration: true
     }
   })

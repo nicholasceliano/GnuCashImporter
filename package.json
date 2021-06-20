@@ -21,6 +21,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "csv-parse": "^4.8.6",
     "electron": "^8.0.1",
+    "googleapis": "^39.2.0",
     "inversify": "^5.0.1",
     "mysql": "^2.18.1",
     "node": "^12.16.0",
