@@ -39,10 +39,28 @@
           </div>
         </div>
         <div>
+          <div class="section-title">Local Database Backup</div>
+          <div class="input-item">
+            <div class="label">Enable:</div>
+            <input type="checkbox" v-model="configData.LocalDbBackup.Enable" />
+          </div>
+          <div class="input-item">
+            <div class="label">Local Path:</div>
+            <input type="text" v-model="configData.LocalDbBackup.LocalPath" />
+          </div>
+        </div>
+        <div>
           <div class="section-title">AlphaVantage</div>
           <div class="input-item">
             <div class="label">API Key</div>
             <input type="text" v-model="configData.AlphaVantageApiKey" />
+          </div>
+        </div>
+        <div>
+          <div class="section-title">SSH</div>
+          <div class="input-item">
+            <div class="label">Connection</div>
+            <input type="text" v-model="configData.SshConnection" />
           </div>
         </div>
       </div>
@@ -88,7 +106,10 @@ export default class ConfigModal extends Vue {
       this.configData.GnuCashDbConn.Database = this.originalData.GnuCashDbConn.Database
       this.configData.GnuCashDbConn.User = this.originalData.GnuCashDbConn.User
       this.configData.GnuCashDbConn.Password = this.originalData.GnuCashDbConn.Password
+      this.configData.LocalDbBackup.Enable = this.originalData.LocalDbBackup.Enable
+      this.configData.LocalDbBackup.LocalPath = this.originalData.LocalDbBackup.LocalPath
       this.configData.AlphaVantageApiKey = this.originalData.AlphaVantageApiKey
+      this.configData.SshConnection = this.originalData.SshConnection
     }
   }
 

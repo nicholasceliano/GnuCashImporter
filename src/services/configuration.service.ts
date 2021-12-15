@@ -19,7 +19,8 @@ export class ConfigurationService {
   public ConfigData: ConfigurationData = {
     GnuCashDbConn: { Host: '', Database: '', User: '', Password: '' },
     GnuCashDefaults: { CurrencyGUID: '', ReconcileAccountGUID: '' },
-    AlphaVantageApiKey: ''
+    LocalDbBackup: { Enable: false, LocalPath: '' },
+    AlphaVantageApiKey: '', SshConnection: ''
   };
 
   GetConfigData(): Promise<ConfigurationData> {

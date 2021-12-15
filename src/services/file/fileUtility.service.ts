@@ -22,4 +22,14 @@ export class FileUtilityService {
   IsValidFile (filePath: string): boolean {
     return fs.lstatSync(filePath).isFile() && (filePath.indexOf('.gitignore') === -1)
   }
+
+  MoveFile(sourceFile: string, destinationFilePath: string) {
+    const fileName = sourceFile.split('/')[sourceFile.split('/').length - 1]
+    const desitinationFileLocation = `${destinationFilePath}\\${fileName}`
+    fs.copyFile(sourceFile, desitinationFileLocation, () => {
+      fs.unlinkSync(sourceFile)
+    })
+
+    return desitinationFileLocation
+  }
 }
