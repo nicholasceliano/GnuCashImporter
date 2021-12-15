@@ -1,7 +1,7 @@
 
 export const environment = {
   production: false,
-  fileUploadDirectory: './FileUploadDirectory',
+  fileUploadDirectory: '.',
   archiveFolderName: 'Archive',
   userConfigFolderName: 'GnuCashImporter',
   userConfigFileName: 'user.config.json',

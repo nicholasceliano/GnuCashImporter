@@ -14,7 +14,7 @@ module.exports = {
             "nsis": {
                 "installerIcon": "public/logo.ico",
                 "uninstallerIcon": "public/logo.ico",
-                "uninstallDisplayName": "CPU Monitor",
+                "uninstallDisplayName": "GnuCash Importer",
                 "oneClick": false,
                 "allowToChangeInstallationDirectory": true
             }
